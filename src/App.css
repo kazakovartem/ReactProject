@@ -1,0 +1,373 @@
+body{
+  background-color: #61dafb;
+  width: 100%;
+}
+.root{
+  background-color: #61dafb;
+  width: 100%;
+  position: relative;
+}
+.App {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  background-color: #61dafb;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(202, 166, 235); 
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: blueviolet; 
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.App_header{
+  width: 100%;
+  font-size: 48px;
+  text-decoration: black;
+  text-align: center;
+  background-color: rgb(162, 211, 204);
+  position: relative;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.App-body{
+  height: 100%;
+  width: 100%;
+  background-color: #61dafb;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+.popup_nameForm{
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  top:0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.popup_name{
+  height: 380px;
+  width: 500px;
+  background-color: #fdfcfc;
+  border-radius: 12px;
+  padding: 20px;
+  font-size: 55px;
+}
+
+.popup_nameButton{
+  background-color: #61dafb;
+  border-radius: 12px;
+  height: 32px;
+  width: 100px;
+}
+.popup_nameButton:hover{
+  color: #fdfcfc;
+  background-color: #2485a0;
+}
+#titleName{
+  border-radius: 6px;
+  font-size: 22px;
+}
+.board-main{
+  height:100%;
+  width: 95%;
+  display: flex;
+}
+.board{
+  height: 600px;
+  width: 300px;
+  background-color: blueviolet;
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;
+  margin-top: 10px;
+  border-radius: 8px 8px 4px 8px ;
+  position: relative;
+}
+.board-head{
+  height:60px;
+  width: 300px;
+  background-color: rgb(202, 166, 235);
+  border-radius: 8px 8px 0 0 ;
+  position: relative;
+}
+.addBoardButton{
+  margin-right: 8px;
+  margin-top: 5px;
+  float: right;
+  height: 40px;
+  width: 26px;
+  border-radius: 0 8px  8px 0;
+  background-color:rgb(43, 238, 4);
+  border: rgb(43, 238, 4);
+}
+.addBoardButton:hover {
+  background-color:rgb(200, 253, 190);
+}
+.board-headText{
+  height:50px;
+  width: 250px;
+  font-size: 26px;
+  border-radius: 8px;
+  border:none;
+  margin-left: 10px;
+  background-color: rgb(202, 166, 235);
+  outline: none;
+	-moz-appearance: none;
+  resize: none;
+}
+
+.board-body{
+  height: 100%;
+  width: 100%;
+  overflow: visible;
+  overflow-x:  hidden;
+}
+.card{
+  width: 280px;
+  background-color: rgb(216, 208, 224);
+  border-radius: 8px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+.card-head{
+  margin-left: 10px;
+}
+.card-body{
+  margin-left: 15px;
+  font-size: 10px;
+}
+.deleteCard{
+  float: right;
+  margin-right: 8px;
+  margin-top: 5px;
+  height: 20px;
+  width: 20px;
+  border-radius: 8px;
+  background-color:rgb(243, 71, 71);
+  border: rgb(243, 71, 71);
+}
+.deleteCard:hover {
+  background-color:rgb(231, 181, 181);
+}
+.deleteBoardButton{
+  float: right;
+  margin-right: 8px;
+  margin-top: 8px;
+  height: 40px;
+  width: 26px;
+  border-radius: 0 8px  8px 0;
+  background-color:rgb(243, 71, 71);
+  border: rgb(243, 71, 71);
+}
+.deleteBoardButton:hover {
+  background-color:rgb(231, 181, 181);
+}
+.addCard{
+  margin-bottom: 30px;
+  height: 40px;
+}
+.addCard span{
+  margin-left: 9px;
+  font-size: 20px;
+}
+.newCard{
+  background-color: #ffffff;
+  border: none;
+  border-radius:  8px 0 0 8px;
+  margin-left: 9px;
+  margin-top: 7px;
+  font-size: 20px;
+  width: 238px;
+  
+}
+.addCardButton{
+  float: right;
+  margin-right: 8px;
+  margin-top: 7px;
+  height: 24px;
+  width: 20px;
+  border-radius: 0 8px 8px 0 ;
+  background-color:rgb(0, 255, 34);
+  border: rgb(243, 71, 71);
+}
+.addCardButton:hover {
+  background-color:rgb(189, 255, 198);
+}
+.card-Form{
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  top:0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card-headText{
+  height:50px;
+  width: 520px;
+  font-size: 26px;
+  border-radius: 8px;
+  border:none;
+  margin-left: 10px;
+  padding-left: 10px;
+  background-color: rgb(236, 222, 248);
+  outline: none;
+	-moz-appearance: none;
+  resize: none;
+}
+.cardDescryption{
+  margin-top: 10px;
+  width: 500px;
+  height: 200px;
+  border-radius: 8px 0 0 8px;
+}
+.cardDescryptionButton{
+  width: 20px;
+  border-radius: 0 8px 8px 0;
+  border: none;
+  height: 207px;
+  background-color: rgb(0, 212, 81);
+}
+.cardDescryptionButton:hover{
+  background-color: rgb(210, 255, 227);
+}
+.closeCard{
+  margin-left: 15px;
+  color: rgb(240, 58, 58);
+  font-weight: bold;
+  float: right;
+  font-size: 26px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.closeCard:hover {
+  color: black;
+}
+.card-FormBody{
+  height: 620px;
+  width: 600px;
+  background-color: #fdfcfc;
+  border-radius: 12px;
+  padding: 20px;
+  font-size: 55px;
+}
+.cardComment{
+  position: relative;
+  margin-left: 50px;
+  height: 320px;
+  width: 540px;
+  border-radius: 8px 8px 8px 8px;
+  background-color: rgb(236, 222, 248);
+  overflow: visible;
+  overflow-x:  hidden;
+}
+.commentCard{
+  margin-top: 2px;
+  margin-left: 15px;
+  position: relative;
+  width: 500px;
+  min-height: 26px;
+  font-size: 14px;
+  border-radius: 4px 4px 4px 4px;
+  background-color: #fdfcfc;
+  margin-bottom: 12px;
+  
+}
+.commentBody{
+  position: relative;
+  margin-left: 5px;
+  width: 320px;
+  height: 20px;
+  border: none;
+  border-radius: 5px;
+  float:left;
+  overflow: visible;
+  overflow-x:  hidden;
+}
+.commentFooter{
+  display: flex;
+  justify-content: space-between;
+  float: right;
+  margin-right: 5px;
+  height: 100%;
+  width: 160px;
+  margin-top: 5px;
+}
+.commentAuthor{
+  overflow: visible;
+  overflow-x:  hidden;
+  font-size: 12px;
+}
+.changeComment{
+  width: 15px;
+  height: 15px;
+  border: none;
+  border-radius: 3px;
+  background-color: #efff09;
+}
+.changeComment:hover{
+  background-color: #f3f8a6;
+  border: 1px dashed rgba(170, 50, 220, .6);
+}
+.dellComment{
+  margin-left: 5px;
+  width: 15px;
+  height: 15px;
+  border: none;
+  border-radius: 3px;
+  background-color: #c50303;
+}
+.dellComment:hover{
+  background-color: #f89494;
+  border: 1px dashed rgba(39, 243, 233, 0.6);
+}
+.addNewComment{
+  position: relative;
+  height: 20px;
+  width: 220px;
+}
+.cardNewComment{
+  height: 20px;
+  width: 190px;
+  border: 1px solid rgb(190, 96, 96);
+  border-radius: 4px;
+}
+.addNewCommentButton{
+  position: relative;
+  top: 3px;
+  margin-left: 5px;
+  width: 30px;
+  height: 17px;
+  border: none;
+  border-radius: 3px;
+  background-color: #00ff40;
+}
+.addNewCommentButton:hover{
+  background-color: #59f3d9;
+  border: 1px dashed rgba(39, 243, 233, 0.6);
+}
+.deactive{
+  display: none;
+}
