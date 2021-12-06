@@ -1,0 +1,84 @@
+.card-Form{
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    position: fixed;
+    top:0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-headText{
+    height:50px;
+    width: 520px;
+    font-size: 26px;
+    border-radius: 8px;
+    border:none;
+    margin-left: 10px;
+    padding-left: 10px;
+    background-color: rgb(236, 222, 248);
+    outline: none;
+    -moz-appearance: none;
+    resize: none;
+}
+
+.cardDescryption{
+    margin-top: 10px;
+    width: 500px;
+    height: 200px;
+    border-radius: 8px 0 0 8px;
+}
+
+.cardDescryptionButton{
+    width: 20px;
+    border-radius: 0 8px 8px 0;
+    border: none;
+    height: 207px;
+    background-color: rgb(0, 212, 81);
+}
+
+.cardDescryptionButton:hover{
+    background-color: rgb(210, 255, 227);
+}
+
+.closeCard{
+    margin-left: 15px;
+    color: rgb(240, 58, 58);
+    font-weight: bold;
+    float: right;
+    font-size: 26px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closeCard:hover {
+    color: black;
+}
+
+.card-FormBody{
+    height: 620px;
+    width: 600px;
+    background-color: #fdfcfc;
+    border-radius: 12px;
+    padding: 20px;
+    font-size: 55px;
+}
+
+.cardComment{
+    position: relative;
+    margin-left: 50px;
+    height: 320px;
+    width: 540px;
+    border-radius: 8px 8px 8px 8px;
+    background-color: rgb(236, 222, 248);
+    overflow: visible;
+    overflow-x:  hidden;
+}
+
+.deactive{
+    display: none;
+}

@@ -1,12 +1,8 @@
 import React, { useRef } from 'react';
+import {INameUserProps} from '../interface/interface';
+import './nameStyle.css';
 
-interface NameFormInt{
-    onAdd(title: string): void;
-    active:boolean;
-    setActive : React.Dispatch<React.SetStateAction<boolean>>;
-
-}
-export const NameForm: React.FC<NameFormInt> = props=>{
+export const NameForm: React.FC<INameUserProps> = props => {
 
     const ref = useRef<HTMLInputElement>(null);
     
@@ -23,14 +19,21 @@ export const NameForm: React.FC<NameFormInt> = props=>{
             <div className="popup_name">
                 <label htmlFor="titleName" className='popup_nameLable'>
                     Enter you name :
-                </label><br/>
+                </label>
+
+                <br/>
+
                 <input 
-                type="text" 
-                required
-                placeholder='Имя' 
-                id='titleName'
-                ref ={ref} /><br/>
-                <button onClick = {keyPress} className='popup_nameButton'>Conferm</button>
+                    type="text" 
+                    required
+                    placeholder='Имя' 
+                    id='titleName'
+                    ref={ref} 
+                />
+
+                <br/>
+
+                <button onClick={keyPress} className='popup_nameButton'>Conferm</button>
             </div>
         </div>
     );
