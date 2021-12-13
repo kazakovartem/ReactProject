@@ -1,9 +1,9 @@
-import {ICardList} from '../interface/interface';
+import { ICardList } from '../interface/interface';
 
 export class StorageService {
-    dataKey: string = 'data';
+    dataKey = 'data';
 
-    get data(): ICardList[] { 
+    get data(): ICardList[] {
         const dataString = localStorage.getItem(this.dataKey);
         return JSON.parse(dataString ? dataString : '[]');
     }

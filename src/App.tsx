@@ -1,40 +1,44 @@
 import React, { useState } from 'react';
-import './App.css';
-import {NameForm} from './components/userName/name';
-import {BoardCard} from './components/board/board';
+import { NameForm } from './components/NameForm/NameForm';
+import { BoardCard } from './components/BoardCard/BoardCard';
+import styled from 'styled-components';
 
-function App() {
-  const [modalActive, setModalActive] = useState(false);
-  const [nameOwner, setNameOwner] = useState('');
-  const addHandler = (title: string) => {
-    setNameOwner(title);
+const Header = styled.header`
+    width: 100%;
+    font-size: 48px;
+    text-decoration: black;
+    text-align: center;
+    background-color: rgb(162, 211, 204);
+    position: relative;
+`;
 
-  }
+const Main = styled.main`
+    height: 100%;
+    width: 100%;
+    background-color: #61dafb;
+    display: flex;
+    justify-content: center;
+    position: relative;
+`;
 
-  return (
-    <div className="App">
+function App(): JSX.Element {
+    const [modalActive, setModalActive] = useState(false);
+    const [nameOwner, setNameOwner] = useState('');
+    const handleAddNameUser = (title: string): void => {
+        setNameOwner(title);
+    };
 
-      <header className="App_header">
-        Trello Board
-      </header>
+    return (
+        <>
+            <Header>Trello Board</Header>
 
-      <div className="App-body">
+            <Main>
+                <BoardCard nameOwner={nameOwner} />
+            </Main>
 
-        <BoardCard 
-          nameOwner={nameOwner} 
-          setNameOwner={setNameOwner}
-        />
-
-      </div>
-
-      <NameForm 
-        onAdd={addHandler} 
-        active={modalActive} 
-        setActive={setModalActive}
-      />
-
-    </div>
-  );
+            <NameForm onAddNameUser={handleAddNameUser} active={modalActive} onSetActive={setModalActive} />
+        </>
+    );
 }
 
 export default App;

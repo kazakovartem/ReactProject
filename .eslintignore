@@ -1,0 +1,9 @@
+*.css
+*.svg
+src/assets/svgs
+src/api
+node_modules/**
+src/reportWebVitals.ts
+src/reporTests.ts
+.prettierrc.js
+.eslintrc.js

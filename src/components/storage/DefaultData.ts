@@ -1,84 +1,87 @@
-import {ICardList} from '../interface/interface';
+import { ICardList } from '../interface/interface';
 
-export const boards : ICardList[] =     [
+export const DefaultData: ICardList[] = [
     {
         boardsHeader: 'TODO',
+        boardId: 0,
         cards: [
             {
                 header: 'Product',
                 description: '3 pending tasks to be picked by Raj.',
                 comments: [
                     {
-                        description: 'it\'s not right',
-                        commentator: 'stas'
+                        description: "it's not right",
+                        commentator: 'Stas',
                     },
                     {
                         description: 'string1',
-                        commentator: 'stas'
+                        commentator: 'stas',
                     },
-                ]
+                ],
             },
             {
                 header: 'Sales',
-                description: 'Send proposal to Puneet for sales prices.',
+                description: 'Send proposal to Punnet for sales prices.',
                 comments: [
                     {
                         description: 'string',
-                        commentator: ''
+                        commentator: '',
                     },
-                ]
-            }
-        ]
-
+                ],
+            },
+        ],
     },
 
     {
         boardsHeader: 'In Progress',
+        boardId: 1,
         cards: [
             {
                 header: 'UAT Testing',
-                description: 'Ask testing engg. to set up testing infrastructure.',
-                comments: []
-            }
-        ]
+                description: 'Ask testing eng. to set up testing infrastructure.',
+                comments: [],
+            },
+        ],
     },
 
     {
         boardsHeader: 'Testing',
+        boardId: 2,
         cards: [
             {
                 header: 'UAT Testing',
-                description: 'Ask testing engg. to set up testing infrastructure.',
-                comments: []
-            }
-        ]
+                description: 'Ask testing eng. to set up testing infrastructure.',
+                comments: [],
+            },
+        ],
     },
 
     {
         boardsHeader: 'Done',
+        boardId: 4,
         cards: [
             {
                 header: 'UAT Testing',
-                description: 'Ask testing engg. to set up testing infrastructure.',
+                description: 'Ask testing eng. to set up testing infrastructure.',
                 comments: [
                     {
                         description: 'all right',
-                        commentator: 'sas'
+                        commentator: 'sas',
                     },
                     {
                         description: 'check',
-                        commentator: 'sas'
+                        commentator: 'sas',
                     },
                     {
                         description: 'done',
-                        commentator: 'sas'
+                        commentator: 'sas',
                     },
                     {
                         description: 'well',
-                        commentator: 'sas'
+                        commentator: 'sas',
                     },
-                ]
-            }
-        ]
-    }
+                ],
+            },
+        ],
+    },
 ];
