@@ -1,6 +1,41 @@
 import React, { useRef } from 'react';
-import { INameUserProps } from './INameUserProps';
 import styled from 'styled-components';
+
+interface NameUserProps {
+    onAddNameUser(title: string): void;
+    active: boolean;
+    onSetActive: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const NameForm = ({ onAddNameUser, active, onSetActive }: NameUserProps) => {
+    const nameUserRef = useRef<HTMLInputElement>(null);
+
+    const handleAddNameUser = (): void => {
+        if (nameUserRef.current!.value !== '') {
+            onAddNameUser(nameUserRef.current!.value);
+            nameUserRef.current!.value = '';
+            onSetActive(true);
+        }
+    };
+
+    return (
+        <NamePopup theme={{ active: active }}>
+            <PopupForm>
+                <label htmlFor="titleName"> Enter you name :</label>
+
+                <br />
+
+                <Input type="text" required placeholder="Имя" id="titleName" ref={nameUserRef} />
+
+                <br />
+
+                <ConfButton type="button" onClick={handleAddNameUser}>
+                    Confirm
+                </ConfButton>
+            </PopupForm>
+        </NamePopup>
+    );
+};
 
 const ConfButton = styled.button`
     background-color: #61dafb;
@@ -39,33 +74,3 @@ const NamePopup = styled.div`
     align-items: center;
     justify-content: center;
 `;
-
-export const NameForm = ({ onAddNameUser, active, onSetActive }: INameUserProps) => {
-    const nameUserRef = useRef<HTMLInputElement>(null);
-
-    const handleAddNameUser = (): void => {
-        if (nameUserRef.current!.value !== '') {
-            onAddNameUser(nameUserRef.current!.value);
-            nameUserRef.current!.value = '';
-            onSetActive(true);
-        }
-    };
-
-    return (
-        <NamePopup theme={{ active: active }}>
-            <PopupForm>
-                <label htmlFor="titleName"> Enter you name :</label>
-
-                <br />
-
-                <Input type="text" required placeholder="Имя" id="titleName" ref={nameUserRef} />
-
-                <br />
-
-                <ConfButton type="button" onClick={handleAddNameUser}>
-                    Confirm
-                </ConfButton>
-            </PopupForm>
-        </NamePopup>
-    );
-};

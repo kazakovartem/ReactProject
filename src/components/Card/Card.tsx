@@ -1,7 +1,149 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Comment } from '../Comment/Comment';
-import { ICardProps } from './ICardProps';
 import styled from 'styled-components';
+import { ICardState } from '../interface/interface';
+
+interface CardProps {
+    valueStateRef: boolean;
+    onSetValueStateRef: React.Dispatch<React.SetStateAction<boolean>>;
+    active: boolean;
+    onSetActive: React.Dispatch<React.SetStateAction<boolean>>;
+    cardState: ICardState;
+    setCardState: React.Dispatch<React.SetStateAction<ICardState>>;
+    onCardHeard(cardHead: string, cardIndex: number, indexBoard: number): void;
+    onCardDescription(cardDescription: string, cardIndex: number, indexBoard: number): void;
+    nameOwner: string;
+    onNewComment(commentDescription: string, nameOwner: string, cardIndex: number, indexBoard: number): void;
+    onDellComment(commentIndex: number, indexCard: number, indexBoard: number): void;
+    onChangeComment(commentDescription: string, commentIndex: number, indexCard: number, indexBoard: number): void;
+}
+
+export const Card = ({
+    valueStateRef,
+    onSetValueStateRef,
+    active,
+    onSetActive,
+    cardState,
+    onCardHeard,
+    onCardDescription,
+    nameOwner,
+    onNewComment,
+    onDellComment,
+    onChangeComment,
+}: CardProps) => {
+    const refCardHead = useRef<HTMLInputElement>(null);
+    const refCardDescriptor = useRef<HTMLTextAreaElement>(null);
+    const refCardComment = useRef<HTMLInputElement>(null);
+    const [valueCommentRef, setValueCommentRef] = useState(false);
+
+    useEffect(() => {
+        if (valueStateRef) {
+            refCardHead.current!.value = cardState.head;
+            refCardDescriptor.current!.value = cardState.description;
+            refCardComment.current!.value = '';
+            onSetValueStateRef(false);
+            setValueCommentRef(true);
+        }
+    }, [valueStateRef, cardState.description, cardState.head, onSetValueStateRef]);
+
+    const handleChangeDescription = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        if (refCardDescriptor.current!.value !== '') {
+            onCardDescription(refCardDescriptor.current!.value, cardState.index, cardState.indexBoard);
+        }
+    };
+
+    useEffect(() => {
+        const keyDownEsc = (ev: KeyboardEvent) => {
+            if (ev.keyCode === 27 && !active) {
+                onSetActive(true);
+                document.removeEventListener('keydown', keyDownEsc);
+            }
+        };
+        if (!active) {
+            document.addEventListener('keydown', keyDownEsc);
+        }
+    }, [active, onSetActive]);
+
+    const handleCloseModal = (e: React.SyntheticEvent) => {
+        e.stopPropagation();
+        onSetActive(true);
+    };
+
+    const handleStopPropagation = (e: React.SyntheticEvent) => {
+        e.stopPropagation();
+    };
+
+    const handleChangeHeadCard = () => {
+        onCardHeard(refCardHead.current!.value, cardState.index, cardState.indexBoard);
+    };
+
+    const handleAddNewComment = () => {
+        if (refCardComment.current!.value !== '') {
+            onNewComment(refCardComment.current!.value, nameOwner, cardState.index, cardState.indexBoard);
+            refCardComment.current!.value = '';
+        }
+    };
+
+    const handleDellComment = (commentIndex: number) => {
+        onDellComment(commentIndex, cardState.index, cardState.indexBoard);
+    };
+
+    const handleChangeComment = (commentDescription: string, commentIndex: number) => {
+        onChangeComment(commentDescription, commentIndex, cardState.index, cardState.indexBoard);
+    };
+
+    return (
+        <CardForm theme={{ active: active }} onClick={handleCloseModal}>
+            <CardFormBody onClick={handleStopPropagation}>
+                <CardName
+                    name={'cardFormHeard' + cardState.index}
+                    defaultValue={cardState.head}
+                    type="text"
+                    ref={refCardHead}
+                    onInput={() => handleChangeHeadCard()}
+                />
+
+                <CloseCard onClick={handleCloseModal}>close</CloseCard>
+
+                <br />
+                <DescriptionCard>
+                    <CardDescription ref={refCardDescriptor} defaultValue={cardState.description} />
+
+                    <ChangeDescriptionCard onClick={handleChangeDescription}>Change</ChangeDescriptionCard>
+                </DescriptionCard>
+                <CardComment>
+                    {cardState.comments.map((comment, commentIndex) => {
+                        return (
+                            <Comment
+                                valueCommentRef={valueCommentRef}
+                                onChangeComment={handleChangeComment}
+                                key={commentIndex}
+                                onDellComment={handleDellComment}
+                                commentState={comment}
+                                commentIndex={commentIndex}
+                            />
+                        );
+                    })}
+                    <CommentCard>
+                        <span>Add new Comment : </span>
+
+                        <CardNewComment
+                            name={'cardNewComment'}
+                            type="text"
+                            placeholder="new comment text"
+                            ref={refCardComment}
+                            onInput={() => handleChangeHeadCard()}
+                        />
+
+                        <AddNewCommentButton onClick={handleAddNewComment}>Add</AddNewCommentButton>
+                    </CommentCard>
+                </CardComment>
+                <br />
+            </CardFormBody>
+        </CardForm>
+    );
+};
 
 const CardForm = styled.div`
     text-align: center;
@@ -135,130 +277,3 @@ const CardNewComment = styled.input`
     color: rgb(0, 0, 0);
     border-radius: 4px;
 `;
-
-export const Card = ({
-    valueStateRef,
-    onSetValueStateRef,
-    active,
-    onSetActive,
-    cardState,
-    onCardHeard,
-    onCardDescription,
-    nameOwner,
-    onNewComment,
-    onDellComment,
-    onChangeComment,
-}: ICardProps) => {
-    const refCardHead = useRef<HTMLInputElement>(null);
-    const refCardDescriptor = useRef<HTMLTextAreaElement>(null);
-    const refCardComment = useRef<HTMLInputElement>(null);
-    const [valueCommentRef, setValueCommentRef] = useState(false);
-
-    useEffect(() => {
-        if (valueStateRef) {
-            refCardHead.current!.value = cardState.head;
-            refCardDescriptor.current!.value = cardState.description;
-            refCardComment.current!.value = '';
-            onSetValueStateRef(false);
-            setValueCommentRef(true);
-        }
-    }, [valueStateRef, cardState.description, cardState.head, onSetValueStateRef]);
-
-    const handleChangeDescription = (event: React.MouseEvent) => {
-        event.stopPropagation();
-        if (refCardDescriptor.current!.value !== '') {
-            onCardDescription(refCardDescriptor.current!.value, cardState.index, cardState.indexBoard);
-        }
-    };
-
-    useEffect(() => {
-        const keyDownEsc = (ev: KeyboardEvent) => {
-            if (ev.keyCode === 27 && !active) {
-                onSetActive(true);
-                document.removeEventListener('keydown', keyDownEsc);
-            }
-        };
-        if (!active) {
-            document.addEventListener('keydown', keyDownEsc);
-        }
-    }, [active, onSetActive]);
-
-    const handleCloseModal = (e: React.SyntheticEvent) => {
-        e.stopPropagation();
-        onSetActive(true);
-    };
-
-    const handleStopPropagation = (e: React.SyntheticEvent) => {
-        e.stopPropagation();
-    };
-
-    const handleChangeHeadCard = () => {
-        onCardHeard(refCardHead.current!.value, cardState.index, cardState.indexBoard);
-    };
-
-    const handleAddNewComment = () => {
-        if (refCardComment.current!.value !== '') {
-            onNewComment(refCardComment.current!.value, nameOwner, cardState.index, cardState.indexBoard);
-            refCardComment.current!.value = '';
-        }
-    };
-
-    const handleDellComment = (commentIndex: number) => {
-        onDellComment(commentIndex, cardState.index, cardState.indexBoard);
-    };
-
-    const handleChangeComment = (commentDescription: string, commentIndex: number) => {
-        onChangeComment(commentDescription, commentIndex, cardState.index, cardState.indexBoard);
-    };
-
-    return (
-        <CardForm theme={{ active: active }} onClick={handleCloseModal}>
-            <CardFormBody onClick={handleStopPropagation}>
-                <CardName
-                    name={'cardFormHeard' + cardState.index}
-                    defaultValue={cardState.head}
-                    type="text"
-                    ref={refCardHead}
-                    onInput={() => handleChangeHeadCard()}
-                />
-
-                <CloseCard onClick={handleCloseModal}>close</CloseCard>
-
-                <br />
-                <DescriptionCard>
-                    <CardDescription ref={refCardDescriptor} defaultValue={cardState.description} />
-
-                    <ChangeDescriptionCard onClick={handleChangeDescription}>Change</ChangeDescriptionCard>
-                </DescriptionCard>
-                <CardComment>
-                    {cardState.comments.map((comment, commentIndex) => {
-                        return (
-                            <Comment
-                                valueCommentRef={valueCommentRef}
-                                onChangeComment={handleChangeComment}
-                                key={commentIndex}
-                                onDellComment={handleDellComment}
-                                commentState={comment}
-                                commentIndex={commentIndex}
-                            />
-                        );
-                    })}
-                    <CommentCard>
-                        <span>Add new Comment : </span>
-
-                        <CardNewComment
-                            name={'cardNewComment'}
-                            type="text"
-                            placeholder="new comment text"
-                            ref={refCardComment}
-                            onInput={() => handleChangeHeadCard()}
-                        />
-
-                        <AddNewCommentButton onClick={handleAddNewComment}>Add</AddNewCommentButton>
-                    </CommentCard>
-                </CardComment>
-                <br />
-            </CardFormBody>
-        </CardForm>
-    );
-};

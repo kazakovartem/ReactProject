@@ -1,7 +1,123 @@
 import React, { useRef, useState } from 'react';
-import { IBoardContent } from './IBoardContent';
-import { IComment } from '../interface/interface';
 import styled from 'styled-components';
+import { IBoardState, IComment } from '../interface/interface';
+
+interface BoardContentProps {
+    nameOwner: string;
+    boardState: IBoardState;
+    index: number;
+    onShowCardForm(
+        indexBoard: number,
+        indexCard: number,
+        header: string,
+        description: string,
+        comments: IComment[],
+    ): void;
+    onDeleteCard(indexBoard: number, indexCard: number): void;
+    onAddNewCard(boardIndex: number, value: string): void;
+    onBoardHeard(boardHead: string, boardIndex: number): void;
+    onDeleteBoard(boardIndex: number): void;
+}
+
+export const BoardContent = ({
+    boardState,
+    index,
+    onShowCardForm,
+    onDeleteCard,
+    onAddNewCard,
+    onBoardHeard,
+    onDeleteBoard,
+}: BoardContentProps) => {
+    const refBoardHead = useRef<HTMLInputElement>(null);
+    const refNewCard = useRef<HTMLInputElement>(null);
+    const [activeAddF, setActiveAddF] = useState(false);
+
+    const handleChangeBoardTitle = () => {
+        onBoardHeard(refBoardHead.current!.value, index);
+    };
+
+    const handleOpenCard = (
+        indexCard: number,
+        header: string,
+        comments: IComment[],
+        indexBoard: number,
+        description: string,
+    ) => {
+        onShowCardForm(indexBoard, indexCard, header, description, comments);
+    };
+
+    const handleDeleteCard = (e: React.SyntheticEvent, boardIndex: number, cardIndex: number) => {
+        e.stopPropagation();
+        onDeleteCard(boardIndex, cardIndex);
+    };
+
+    const handleNewCard = (e: React.SyntheticEvent, indexBoard: number) => {
+        e.stopPropagation();
+        if (refNewCard.current!.value !== '') {
+            onAddNewCard(indexBoard, refNewCard.current!.value);
+            refNewCard.current!.value = '';
+            setActiveAddF(false);
+        } else {
+            setActiveAddF(false);
+        }
+    };
+
+    const ShowAddCardForm = () => {
+        setActiveAddF(true);
+    };
+
+    const handleDeleteBoard = (indexBoard: number) => {
+        onDeleteBoard(indexBoard);
+    };
+
+    return (
+        <BoardBody className="board" key={index}>
+            <BoardHead>
+                <BoardHeadText
+                    key={index}
+                    name="boardHeard"
+                    id={'boardHeard' + index}
+                    type="text"
+                    defaultValue={boardState.boardsHeader}
+                    ref={refBoardHead}
+                    onInput={handleChangeBoardTitle}
+                />
+                <DeleteBoardButton onClick={() => handleDeleteBoard(index)}>Dell</DeleteBoardButton>
+            </BoardHead>
+            <BoardMain>
+                {boardState.cards.map((card, cardIndex) => {
+                    return (
+                        <Card
+                            key={cardIndex}
+                            onClick={() =>
+                                handleOpenCard(cardIndex, card.header, card.comments, index, card.description)
+                            }
+                        >
+                            <CardHead>
+                                {card.header}
+
+                                <DeleteCardButton onClick={(e) => handleDeleteCard(e, index, cardIndex)}>
+                                    Dell
+                                </DeleteCardButton>
+                            </CardHead>
+
+                            <br />
+
+                            <CardBody>Comments: {card.comments.length}</CardBody>
+                        </Card>
+                    );
+                })}
+                <CardNew onClick={ShowAddCardForm}>
+                    <AddCardTitle theme={{ active: activeAddF }}>Add new card</AddCardTitle>
+                    <AddCardBody theme={{ active: activeAddF }}>
+                        <NewCardTitle type="text" ref={refNewCard} />
+                        <AddCardButton onClick={(e) => handleNewCard(e, index)}>Add</AddCardButton>
+                    </AddCardBody>
+                </CardNew>
+            </BoardMain>
+        </BoardBody>
+    );
+};
 
 const BoardBody = styled.div`
     height: 600px;
@@ -138,103 +254,3 @@ const AddCardButton = styled.button`
         background-color: rgb(189, 255, 198);
     }
 `;
-
-export const BoardContent = ({
-    boardState,
-    index,
-    onShowCardForm,
-    onDeleteCard,
-    onAddNewCard,
-    onBoardHeard,
-    onDeleteBoard,
-}: IBoardContent) => {
-    const refBoardHead = useRef<HTMLInputElement>(null);
-    const refNewCard = useRef<HTMLInputElement>(null);
-    const [activeAddF, setActiveAddF] = useState(false);
-
-    const handleChangeBoardTitle = () => {
-        onBoardHeard(refBoardHead.current!.value, index);
-    };
-
-    const handleOpenCard = (
-        indexCard: number,
-        header: string,
-        comments: IComment[],
-        indexBoard: number,
-        description: string,
-    ) => {
-        onShowCardForm(indexBoard, indexCard, header, description, comments);
-    };
-
-    const handleDeleteCard = (e: React.SyntheticEvent, boardIndex: number, cardIndex: number) => {
-        e.stopPropagation();
-        onDeleteCard(boardIndex, cardIndex);
-    };
-
-    const handleNewCard = (e: React.SyntheticEvent, indexBoard: number) => {
-        e.stopPropagation();
-        if (refNewCard.current!.value !== '') {
-            onAddNewCard(indexBoard, refNewCard.current!.value);
-            refNewCard.current!.value = '';
-            setActiveAddF(false);
-        } else {
-            setActiveAddF(false);
-        }
-    };
-
-    const ShowAddCardForm = () => {
-        setActiveAddF(true);
-    };
-
-    const handleDeleteBoard = (indexBoard: number) => {
-        onDeleteBoard(indexBoard);
-    };
-
-    return (
-        <BoardBody className="board" key={index}>
-            <BoardHead>
-                <BoardHeadText
-                    key={index}
-                    name="boardHeard"
-                    id={'boardHeard' + index}
-                    type="text"
-                    defaultValue={boardState.boardsHeader}
-                    ref={refBoardHead}
-                    onInput={handleChangeBoardTitle}
-                />
-                <DeleteBoardButton onClick={() => handleDeleteBoard(index)}>Dell</DeleteBoardButton>
-            </BoardHead>
-            <BoardMain>
-                {boardState.cards.map((card, cardIndex) => {
-                    return (
-                        <Card
-                            key={cardIndex}
-                            onClick={() =>
-                                handleOpenCard(cardIndex, card.header, card.comments, index, card.description)
-                            }
-                        >
-                            <CardHead>
-                                {card.header}
-
-                                <DeleteCardButton onClick={(e) => handleDeleteCard(e, index, cardIndex)}>
-                                    Dell
-                                </DeleteCardButton>
-                            </CardHead>
-
-                            <br />
-
-                            <CardBody>Comments: {card.comments.length}</CardBody>
-                        </Card>
-                    );
-                })}
-                <CardNew onClick={ShowAddCardForm}>
-                    <AddCardTitle theme={{ active: activeAddF }}>Add new card</AddCardTitle>
-                    <AddCardBody theme={{ active: activeAddF }}>
-                        <NewCardTitle type="text" ref={refNewCard} />
-                        <AddCardButton onClick={(e) => handleNewCard(e, index)}>Add</AddCardButton>
-                    </AddCardBody>
-                </CardNew>
-            </BoardMain>
-        </BoardBody>
-    );
-};

@@ -3,69 +3,14 @@ import { Card } from '../Card/Card';
 import { BoardContent } from '../BoardContent/BoardContent';
 import { StorageService } from '../storage/StorageService';
 import { DefaultData } from '../storage/DefaultData';
-import { IBoardProps } from './IBoardProps';
 import { ICardState, IBoardState, IComment } from '../interface/interface';
 import styled from 'styled-components';
 
-const BoardMain = styled.div`
-    height: 100%;
-    width: 95%;
-    display: flex;
-    overflow: visible;
-    overflow-y: hidden;
-`;
+interface BoardProps {
+    nameOwner: string;
+}
 
-const NewBoardBody = styled.div`
-    height: 600px;
-    width: 300px;
-    background-color: blueviolet;
-    display: flex;
-    flex-direction: column;
-    margin-right: 10px;
-    margin-top: 10px;
-    border-radius: 8px 8px 4px 8px;
-    position: relative;
-`;
-
-const AddBoardButton = styled.button`
-    margin-right: 8px;
-    margin-top: 5px;
-    float: right;
-    height: 40px;
-    width: 26px;
-    border-radius: 0 8px 8px 0;
-    background-color: rgb(43, 238, 4);
-    border: rgb(43, 238, 4);
-    color: rgb(0, 0, 0);
-    padding: 0;
-    font-size: 9px;
-    &:hover {
-        background-color: rgb(200, 253, 190);
-    }
-`;
-
-const BoardHead = styled.div`
-    height: 60px;
-    width: 300px;
-    background-color: rgb(202, 166, 235);
-    border-radius: 8px 8px 0 0;
-    position: relative;
-`;
-
-const BoardHeadText = styled.input`
-    height: 50px;
-    width: 250px;
-    font-size: 26px;
-    border-radius: 8px;
-    border: none;
-    margin-left: 10px;
-    background-color: rgb(202, 166, 235);
-    outline: none;
-    -moz-appearance: none;
-    resize: none;
-`;
-
-export const BoardCard = ({ nameOwner }: IBoardProps) => {
+export const BoardCard = ({ nameOwner }: BoardProps) => {
     const storage = new StorageService();
 
     if (!(Array.isArray(storage.data) && storage.data.length)) {
@@ -260,3 +205,61 @@ export const BoardCard = ({ nameOwner }: IBoardProps) => {
         </BoardMain>
     );
 };
+
+const BoardMain = styled.div`
+    height: 100%;
+    width: 95%;
+    display: flex;
+    overflow: visible;
+    overflow-y: hidden;
+`;
+
+const NewBoardBody = styled.div`
+    height: 600px;
+    width: 300px;
+    background-color: blueviolet;
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+    margin-top: 10px;
+    border-radius: 8px 8px 4px 8px;
+    position: relative;
+`;
+
+const AddBoardButton = styled.button`
+    margin-right: 8px;
+    margin-top: 5px;
+    float: right;
+    height: 40px;
+    width: 26px;
+    border-radius: 0 8px 8px 0;
+    background-color: rgb(43, 238, 4);
+    border: rgb(43, 238, 4);
+    color: rgb(0, 0, 0);
+    padding: 0;
+    font-size: 9px;
+    &:hover {
+        background-color: rgb(200, 253, 190);
+    }
+`;
+
+const BoardHead = styled.div`
+    height: 60px;
+    width: 300px;
+    background-color: rgb(202, 166, 235);
+    border-radius: 8px 8px 0 0;
+    position: relative;
+`;
+
+const BoardHeadText = styled.input`
+    height: 50px;
+    width: 250px;
+    font-size: 26px;
+    border-radius: 8px;
+    border: none;
+    margin-left: 10px;
+    background-color: rgb(202, 166, 235);
+    outline: none;
+    -moz-appearance: none;
+    resize: none;
+`;

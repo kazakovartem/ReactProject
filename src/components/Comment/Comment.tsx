@@ -1,6 +1,55 @@
 import React, { useRef, useEffect } from 'react';
-import { ICommentProps } from './ICommentProps';
 import styled from 'styled-components';
+import { IComment } from '../interface/interface';
+
+interface CommentProps {
+    valueCommentRef: boolean;
+    commentState: IComment;
+    commentIndex: number;
+    onDellComment(commentIndex: number): void;
+    onChangeComment(commentDescription: string, commentIndex: number): void;
+}
+
+export const Comment = ({
+    valueCommentRef,
+    commentState,
+    commentIndex,
+    onDellComment,
+    onChangeComment,
+}: CommentProps) => {
+    const refCommentDescriptor = useRef<HTMLTextAreaElement>(null);
+
+    useEffect(() => {
+        if (valueCommentRef) {
+            refCommentDescriptor.current!.value = commentState.description;
+        }
+    }, [valueCommentRef, commentState.description]);
+
+    const handleDellComment = () => {
+        onDellComment(commentIndex);
+    };
+
+    const handleChangeComment = () => {
+        if (refCommentDescriptor.current!.value !== '') {
+            onChangeComment(refCommentDescriptor.current!.value, commentIndex);
+            refCommentDescriptor.current!.value = commentState.description;
+        }
+    };
+
+    return (
+        <CommentCard key={commentIndex}>
+            <CommentDescription name="" ref={refCommentDescriptor} defaultValue={commentState.description} />
+            <CommentFooter>
+                <CommentAuthor>
+                    Author: <b>{commentState.commentator}</b>
+                </CommentAuthor>
+
+                <ChangeCommentButton onClick={handleChangeComment}>Change</ChangeCommentButton>
+                <DellCommentButton onClick={handleDellComment}>Dell</DellCommentButton>
+            </CommentFooter>
+        </CommentCard>
+    );
+};
 
 const CommentCard = styled.div`
     margin-top: 2px;
@@ -72,44 +121,3 @@ const DellCommentButton = styled.button`
         border: 1px dashed rgba(39, 243, 233, 0.6);
     }
 `;
-
-export const Comment = ({
-    valueCommentRef,
-    commentState,
-    commentIndex,
-    onDellComment,
-    onChangeComment,
-}: ICommentProps) => {
-    const refCommentDescriptor = useRef<HTMLTextAreaElement>(null);
-
-    useEffect(() => {
-        if (valueCommentRef) {
-            refCommentDescriptor.current!.value = commentState.description;
-        }
-    }, [valueCommentRef, commentState.description]);
-
-    const handleDellComment = () => {
-        onDellComment(commentIndex);
-    };
-
-    const handleChangeComment = () => {
-        if (refCommentDescriptor.current!.value !== '') {
-            onChangeComment(refCommentDescriptor.current!.value, commentIndex);
-            refCommentDescriptor.current!.value = commentState.description;
-        }
-    };
-
-    return (
-        <CommentCard key={commentIndex}>
-            <CommentDescription name="" ref={refCommentDescriptor} defaultValue={commentState.description} />
-            <CommentFooter>
-                <CommentAuthor>
-                    Author: <b>{commentState.commentator}</b>
-                </CommentAuthor>
-
-                <ChangeCommentButton onClick={handleChangeComment}>Change</ChangeCommentButton>
-                <DellCommentButton onClick={handleDellComment}>Dell</DellCommentButton>
-            </CommentFooter>
-        </CommentCard>
-    );
-};

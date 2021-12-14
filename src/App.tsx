@@ -3,24 +3,6 @@ import { NameForm } from './components/NameForm/NameForm';
 import { BoardCard } from './components/BoardCard/BoardCard';
 import styled from 'styled-components';
 
-const Header = styled.header`
-    width: 100%;
-    font-size: 48px;
-    text-decoration: black;
-    text-align: center;
-    background-color: rgb(162, 211, 204);
-    position: relative;
-`;
-
-const Main = styled.main`
-    height: 100%;
-    width: 100%;
-    background-color: #61dafb;
-    display: flex;
-    justify-content: center;
-    position: relative;
-`;
-
 function App(): JSX.Element {
     const [modalActive, setModalActive] = useState(false);
     const [nameOwner, setNameOwner] = useState('');
@@ -42,3 +24,21 @@ function App(): JSX.Element {
 }
 
 export default App;
+
+const Header = styled.header`
+    width: 100%;
+    font-size: 48px;
+    text-decoration: black;
+    text-align: center;
+    background-color: rgb(162, 211, 204);
+    position: relative;
+`;
+
+const Main = styled.main`
+    height: 100%;
+    width: 100%;
+    background-color: #61dafb;
+    display: flex;
+    justify-content: center;
+    position: relative;
+`;
