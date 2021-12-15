@@ -3,7 +3,7 @@ import { ICardList } from '../interface/interface';
 export const DefaultData: ICardList[] = [
     {
         boardsHeader: 'TODO',
-        boardId: 0,
+        boardId: '0',
         cards: [
             {
                 header: 'Product',
@@ -34,7 +34,7 @@ export const DefaultData: ICardList[] = [
 
     {
         boardsHeader: 'In Progress',
-        boardId: 1,
+        boardId: '1',
         cards: [
             {
                 header: 'UAT Testing',
@@ -46,7 +46,7 @@ export const DefaultData: ICardList[] = [
 
     {
         boardsHeader: 'Testing',
-        boardId: 2,
+        boardId: '2',
         cards: [
             {
                 header: 'UAT Testing',
@@ -58,7 +58,7 @@ export const DefaultData: ICardList[] = [
 
     {
         boardsHeader: 'Done',
-        boardId: 4,
+        boardId: '4',
         cards: [
             {
                 header: 'UAT Testing',

@@ -5,6 +5,7 @@ import { StorageService } from '../storage/StorageService';
 import { DefaultData } from '../storage/DefaultData';
 import { ICardState, IBoardState, IComment } from '../interface/interface';
 import styled from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
 
 interface BoardProps {
     nameOwner: string;
@@ -28,7 +29,11 @@ export const BoardCard = ({ nameOwner }: BoardProps) => {
         description: '',
         comments: [],
     });
-    const [boardState, setBoardState] = React.useState<IBoardState>(dataBoards[1]);
+    const [boardState, setBoardState] = React.useState<IBoardState>({
+        boardsHeader: 'NON',
+        boardId: '0',
+        cards: [],
+    });
     const [modalActive, setModalActive] = useState(true);
 
     const handleShowCardForms = (
@@ -86,10 +91,10 @@ export const BoardCard = ({ nameOwner }: BoardProps) => {
 
     const handleAddNewBoard = () => {
         if (refNewBoard.current!.value !== '') {
-            const timer = Date.now();
+            const id = uuidv4();
             dataBoards.push({
                 boardsHeader: refNewBoard.current!.value,
-                boardId: timer,
+                boardId: id,
                 cards: [],
             });
 
@@ -97,7 +102,7 @@ export const BoardCard = ({ nameOwner }: BoardProps) => {
             storage.data = dataBoards;
             setBoardState({
                 boardsHeader: refNewBoard.current!.value,
-                boardId: timer,
+                boardId: id,
                 cards: [],
             });
         }
