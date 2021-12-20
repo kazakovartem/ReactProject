@@ -2,7 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import styled, { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
+import { Provider } from 'react-redux';
+import { store } from './redux/rootReducers';
 
 const Global = createGlobalStyle`
 body {
@@ -37,8 +39,10 @@ code {
 
 ReactDOM.render(
     <React.StrictMode>
-        <Global />
-        <App />
+        <Provider store={store}>
+            <Global />
+            <App />
+        </Provider>
     </React.StrictMode>,
     document.getElementById('root'),
 );

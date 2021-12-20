@@ -1,18 +1,19 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
 
 interface NameUserProps {
-    onAddNameUser(title: string): void;
     active: boolean;
     onSetActive: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const NameForm = ({ onAddNameUser, active, onSetActive }: NameUserProps) => {
+export const NameForm = ({ active, onSetActive }: NameUserProps) => {
     const nameUserRef = useRef<HTMLInputElement>(null);
+    const dispatch = useDispatch();
 
     const handleAddNameUser = (): void => {
         if (nameUserRef.current!.value !== '') {
-            onAddNameUser(nameUserRef.current!.value);
+            dispatch({ type: 'ADD_USER', payload: nameUserRef.current!.value });
             nameUserRef.current!.value = '';
             onSetActive(true);
         }

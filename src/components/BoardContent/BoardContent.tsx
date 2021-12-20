@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { IBoardState, IComment } from '../interface/interface';
 
 interface BoardContentProps {
-    nameOwner: string;
     boardState: IBoardState;
     index: number;
     onShowCardForm(

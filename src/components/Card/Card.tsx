@@ -12,8 +12,7 @@ interface CardProps {
     setCardState: React.Dispatch<React.SetStateAction<ICardState>>;
     onCardHeard(cardHead: string, cardIndex: number, indexBoard: number): void;
     onCardDescription(cardDescription: string, cardIndex: number, indexBoard: number): void;
-    nameOwner: string;
-    onNewComment(commentDescription: string, nameOwner: string, cardIndex: number, indexBoard: number): void;
+    onNewComment(commentDescription: string, cardIndex: number, indexBoard: number): void;
     onDellComment(commentIndex: number, indexCard: number, indexBoard: number): void;
     onChangeComment(commentDescription: string, commentIndex: number, indexCard: number, indexBoard: number): void;
 }
@@ -26,7 +25,6 @@ export const Card = ({
     cardState,
     onCardHeard,
     onCardDescription,
-    nameOwner,
     onNewComment,
     onDellComment,
     onChangeComment,
@@ -80,7 +78,7 @@ export const Card = ({
 
     const handleAddNewComment = () => {
         if (refCardComment.current!.value !== '') {
-            onNewComment(refCardComment.current!.value, nameOwner, cardState.index, cardState.indexBoard);
+            onNewComment(refCardComment.current!.value, cardState.index, cardState.indexBoard);
             refCardComment.current!.value = '';
         }
     };
@@ -103,7 +101,6 @@ export const Card = ({
                     ref={refCardHead}
                     onInput={() => handleChangeHeadCard()}
                 />
-
                 <CloseCard onClick={handleCloseModal}>close</CloseCard>
 
                 <br />

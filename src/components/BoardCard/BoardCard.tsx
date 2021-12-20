@@ -6,13 +6,11 @@ import { DefaultData } from '../storage/DefaultData';
 import { ICardState, IBoardState, IComment } from '../interface/interface';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
+import { useTypedSelector } from '../../hooks/useTypeSelector';
 
-interface BoardProps {
-    nameOwner: string;
-}
-
-export const BoardCard = ({ nameOwner }: BoardProps) => {
+export const BoardCard = () => {
     const storage = new StorageService();
+    const { userName } = useTypedSelector((state) => state.nameUser);
 
     if (!(Array.isArray(storage.data) && storage.data.length)) {
         storage.data = DefaultData;
@@ -29,11 +27,13 @@ export const BoardCard = ({ nameOwner }: BoardProps) => {
         description: '',
         comments: [],
     });
+
     const [boardState, setBoardState] = React.useState<IBoardState>({
         boardsHeader: 'NON',
         boardId: '0',
         cards: [],
     });
+
     const [modalActive, setModalActive] = useState(true);
 
     const handleShowCardForms = (
@@ -114,10 +114,10 @@ export const BoardCard = ({ nameOwner }: BoardProps) => {
         storage.data = dataBoards;
     };
 
-    const handleAddComment = (value: string, author: string, cardIndex: number, indexBoard: number) => {
+    const handleAddComment = (value: string, cardIndex: number, indexBoard: number) => {
         dataBoards[indexBoard].cards[cardIndex].comments.push({
             description: value,
-            commentator: nameOwner,
+            commentator: userName,
         });
 
         storage.data = dataBoards;
@@ -174,7 +174,6 @@ export const BoardCard = ({ nameOwner }: BoardProps) => {
                         onDeleteCard={handleDeleteCard}
                         onShowCardForm={handleShowCardForms}
                         boardState={board}
-                        nameOwner={nameOwner}
                         index={boardIndex}
                     />
                 );
@@ -198,7 +197,6 @@ export const BoardCard = ({ nameOwner }: BoardProps) => {
                 onDellComment={handleDellComment}
                 onNewComment={handleAddComment}
                 onCardDescription={handleChangeDescriptionCard}
-                nameOwner={nameOwner}
                 onSetValueStateRef={setValueStateRef}
                 valueStateRef={valueStateRef}
                 onCardHeard={handleChangeCardHeard}

@@ -5,20 +5,16 @@ import styled from 'styled-components';
 
 function App(): JSX.Element {
     const [modalActive, setModalActive] = useState(false);
-    const [nameOwner, setNameOwner] = useState('');
-    const handleAddNameUser = (title: string): void => {
-        setNameOwner(title);
-    };
 
     return (
         <>
             <Header>Trello Board</Header>
 
             <Main>
-                <BoardCard nameOwner={nameOwner} />
+                <BoardCard />
             </Main>
 
-            <NameForm onAddNameUser={handleAddNameUser} active={modalActive} onSetActive={setModalActive} />
+            <NameForm active={modalActive} onSetActive={setModalActive} />
         </>
     );
 }
