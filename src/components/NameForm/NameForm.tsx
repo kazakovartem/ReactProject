@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
+import { addUserName } from '../../redux/user/actionCreator';
 
 interface NameUserProps {
     active: boolean;
@@ -13,7 +14,7 @@ export const NameForm = ({ active, onSetActive }: NameUserProps) => {
 
     const handleAddNameUser = (): void => {
         if (nameUserRef.current!.value !== '') {
-            dispatch({ type: 'ADD_USER', payload: nameUserRef.current!.value });
+            dispatch(addUserName(nameUserRef.current!.value));
             nameUserRef.current!.value = '';
             onSetActive(true);
         }

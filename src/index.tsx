@@ -4,7 +4,9 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { createGlobalStyle } from 'styled-components';
 import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 import { store } from './redux/rootReducers';
+import { persistor } from './redux/rootReducers';
 
 const Global = createGlobalStyle`
 body {
@@ -40,8 +42,10 @@ code {
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
-            <Global />
-            <App />
+            <PersistGate loading={null} persistor={persistor}>
+                <Global />
+                <App />
+            </PersistGate>
         </Provider>
     </React.StrictMode>,
     document.getElementById('root'),

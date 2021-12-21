@@ -7,10 +7,15 @@ import { ICardState, IBoardState, IComment } from '../interface/interface';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { useTypedSelector } from '../../hooks/useTypeSelector';
+import { useDispatch } from 'react-redux';
+import { addBoard } from '../../redux/boards/actionCreator';
 
 export const BoardCard = () => {
     const storage = new StorageService();
     const { userName } = useTypedSelector((state) => state.nameUser);
+    const { boars } = useTypedSelector((state) => state.boards);
+    const dispatch = useDispatch();
+    console.log(boars);
 
     if (!(Array.isArray(storage.data) && storage.data.length)) {
         storage.data = DefaultData;
@@ -97,7 +102,7 @@ export const BoardCard = () => {
                 boardId: id,
                 cards: [],
             });
-
+            dispatch(addBoard({ boardsHeader: refNewBoard.current!.value, boardId: id }));
             refNewBoard.current!.value = '';
             storage.data = dataBoards;
             setBoardState({
@@ -119,7 +124,7 @@ export const BoardCard = () => {
             description: value,
             commentator: userName,
         });
-
+        console.log(boars);
         storage.data = dataBoards;
 
         setCardState({
@@ -180,6 +185,9 @@ export const BoardCard = () => {
             })}
 
             <NewBoardBody>
+                {boars.map((boardM, boardIndexR) => {
+                    return <p key={boardM.boardId}>{boardM.boardsHeader}</p>;
+                })}
                 <BoardHead>
                     <BoardHeadText
                         name="boardHeard"
