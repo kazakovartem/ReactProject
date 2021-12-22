@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { addCard, dellCard } from './actionCreator';
+import { addCard, dellCard, dellCardCascade } from './actionCreator';
 import { initialState } from './initialState';
 
 export const Cards = createReducer(initialState, (builder) => {
@@ -9,5 +9,8 @@ export const Cards = createReducer(initialState, (builder) => {
         })
         .addCase(dellCard, (state, action) => {
             state.cards.push(action.payload);
+        })
+        .addCase(dellCardCascade, (state, action) => {
+            state.cards = state.cards.filter((cards) => cards.boardId !== action.payload.boardId);
         });
 });

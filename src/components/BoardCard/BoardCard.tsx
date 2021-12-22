@@ -7,15 +7,18 @@ import { ICardState, IBoardState, IComment } from '../interface/interface';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { useTypedSelector } from '../../hooks/useTypeSelector';
-import { useDispatch } from 'react-redux';
-import { addBoard } from '../../redux/boards/actionCreator';
+import { dellCardCascade } from '../../redux/cards/actionCreator';
+import { useActions } from '../../hooks/useActions';
+import { selectCardByBoard } from '../../redux/cards/selector';
 
 export const BoardCard = () => {
     const storage = new StorageService();
     const { userName } = useTypedSelector((state) => state.nameUser);
     const { boars } = useTypedSelector((state) => state.boards);
-    const dispatch = useDispatch();
-    console.log(boars);
+    const { cards } = useTypedSelector((state) => state.cards);
+    const { addBoard } = useActions();
+    const { changeHeardBoard } = useActions();
+    const { dellBoard } = useActions();
 
     if (!(Array.isArray(storage.data) && storage.data.length)) {
         storage.data = DefaultData;
@@ -79,6 +82,7 @@ export const BoardCard = () => {
 
     const handleChangeBoardHeard = (value: string, index: number) => {
         dataBoards[index].boardsHeader = value;
+        changeHeardBoard({ boardsHeader: value, boardId: dataBoards[index].boardId });
         storage.data = dataBoards;
     };
 
@@ -102,7 +106,7 @@ export const BoardCard = () => {
                 boardId: id,
                 cards: [],
             });
-            dispatch(addBoard({ boardsHeader: refNewBoard.current!.value, boardId: id }));
+            addBoard({ boardsHeader: refNewBoard.current!.value, boardId: id });
             refNewBoard.current!.value = '';
             storage.data = dataBoards;
             setBoardState({
@@ -114,8 +118,10 @@ export const BoardCard = () => {
     };
 
     const handleDeleteBoard = (indexBoard: number) => {
+        dellBoard({ boardsHeader: dataBoards[indexBoard].boardsHeader, boardId: dataBoards[indexBoard].boardId });
+        dellCardCascade({ boardId: dataBoards[indexBoard].boardId });
+
         dataBoards.splice(indexBoard, 1);
-        setBoardState(dataBoards[dataBoards.length - 1]);
         storage.data = dataBoards;
     };
 
@@ -124,7 +130,6 @@ export const BoardCard = () => {
             description: value,
             commentator: userName,
         });
-        console.log(boars);
         storage.data = dataBoards;
 
         setCardState({
@@ -185,8 +190,15 @@ export const BoardCard = () => {
             })}
 
             <NewBoardBody>
-                {boars.map((boardM, boardIndexR) => {
-                    return <p key={boardM.boardId}>{boardM.boardsHeader}</p>;
+                {boars.map((boardM) => {
+                    return (
+                        <p key={boardM.boardId}>
+                            {boardM.boardsHeader}
+                            {selectCardByBoard(boardM.boardId, cards).map((cardM: any) => {
+                                return <p key={cardM.cardId}>{cardM.header}</p>;
+                            })}
+                        </p>
+                    );
                 })}
                 <BoardHead>
                     <BoardHeadText
