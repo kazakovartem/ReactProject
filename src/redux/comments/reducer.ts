@@ -1,12 +1,22 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { addBoard } from './actionCreator';
+import { addComment, dellComment, dellCommentCascade, updateComment } from './actionCreator';
+import { initialState } from '../initialState';
 
-export const initialState = {
-    userName: 'Use Redux',
-};
-
-export const Comments = createReducer(initialState, (builder) => {
-    builder.addCase(addBoard, (state, action) => {
-        state.userName = action.payload;
-    });
+export const Comments = createReducer(initialState.comments, (builder) => {
+    builder
+        .addCase(addComment, (state, action) => {
+            state.push(action.payload);
+        })
+        .addCase(dellComment, (state, action) => {
+            return [...state.filter((comments) => comments.commentId !== action.payload.commentId)];
+        })
+        .addCase(dellCommentCascade, (state, action) => {
+            return [...state.filter((comments) => comments.cardId !== action.payload.cardId)];
+        })
+        .addCase(updateComment, (state, action) => {
+            const change = state.find((comments) => comments.commentId === action.payload.commentId);
+            if (change) {
+                change.description = action.payload.description;
+            }
+        });
 });

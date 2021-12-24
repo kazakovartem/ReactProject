@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { User } from './user/reducer';
 import { Boards } from './boards/reducer';
 import { Cards } from './cards/reducer';
+import { Comments } from './comments/reducer';
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
@@ -9,6 +10,7 @@ const rootReducer = combineReducers({
     nameUser: User,
     boards: Boards,
     cards: Cards,
+    comments: Comments,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

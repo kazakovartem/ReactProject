@@ -1,23 +1,18 @@
 import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { IComment } from '../interface/interface';
+import { useActions } from '../../hooks/useActions';
 
 interface CommentProps {
     valueCommentRef: boolean;
     commentState: IComment;
-    commentIndex: number;
-    onDellComment(commentIndex: number): void;
-    onChangeComment(commentDescription: string, commentIndex: number): void;
+    commentIndex: string;
 }
 
-export const Comment = ({
-    valueCommentRef,
-    commentState,
-    commentIndex,
-    onDellComment,
-    onChangeComment,
-}: CommentProps) => {
+export const Comment = ({ valueCommentRef, commentState, commentIndex }: CommentProps) => {
     const refCommentDescriptor = useRef<HTMLTextAreaElement>(null);
+    const { dellComment } = useActions();
+    const { updateComment } = useActions();
 
     useEffect(() => {
         if (valueCommentRef) {
@@ -26,12 +21,12 @@ export const Comment = ({
     }, [valueCommentRef, commentState.description]);
 
     const handleDellComment = () => {
-        onDellComment(commentIndex);
+        dellComment({ commentId: commentState.commentId });
     };
 
     const handleChangeComment = () => {
         if (refCommentDescriptor.current!.value !== '') {
-            onChangeComment(refCommentDescriptor.current!.value, commentIndex);
+            updateComment({ commentId: commentIndex, description: refCommentDescriptor.current!.value });
             refCommentDescriptor.current!.value = commentState.description;
         }
     };

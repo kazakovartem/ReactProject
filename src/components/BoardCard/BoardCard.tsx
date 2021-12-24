@@ -1,187 +1,55 @@
 import React, { useRef, useState } from 'react';
 import { Card } from '../Card/Card';
 import { BoardContent } from '../BoardContent/BoardContent';
-import { StorageService } from '../storage/StorageService';
-import { DefaultData } from '../storage/DefaultData';
-import { ICardState, IBoardState, IComment } from '../interface/interface';
+import { ICardState } from '../interface/interface';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { useTypedSelector } from '../../hooks/useTypeSelector';
-import { dellCardCascade } from '../../redux/cards/actionCreator';
 import { useActions } from '../../hooks/useActions';
-import { selectCardByBoard } from '../../redux/cards/selector';
 
 export const BoardCard = () => {
-    const storage = new StorageService();
-    const { userName } = useTypedSelector((state) => state.nameUser);
-    const { boars } = useTypedSelector((state) => state.boards);
-    const { cards } = useTypedSelector((state) => state.cards);
     const { addBoard } = useActions();
-    const { changeHeardBoard } = useActions();
-    const { dellBoard } = useActions();
-
-    if (!(Array.isArray(storage.data) && storage.data.length)) {
-        storage.data = DefaultData;
-    }
+    const { boards } = useTypedSelector((state) => state);
 
     const refNewBoard = useRef<HTMLInputElement>(null);
     const [valueStateRef, setValueStateRef] = useState(false);
-    const dataBoards = storage.data;
 
     const [cardState, setCardState] = useState<ICardState>({
-        indexBoard: 0,
-        index: 0,
+        boardId: '0',
+        cardId: '0',
         head: '',
         description: '',
         comments: [],
     });
 
-    const [boardState, setBoardState] = React.useState<IBoardState>({
-        boardsHeader: 'NON',
-        boardId: '0',
-        cards: [],
-    });
-
     const [modalActive, setModalActive] = useState(true);
 
-    const handleShowCardForms = (
-        indexBoard: number,
-        indexCard: number,
-        header: string,
-        description: string,
-        comments: IComment[],
-    ) => {
+    const handleShowCardForms = (boardId: string, cardId: string, header: string, description: string) => {
         setCardState({
-            indexBoard: indexBoard,
-            index: indexCard,
+            boardId: boardId,
+            cardId: cardId,
             head: header,
             description: description,
-            comments: comments,
-        });
-
-        setModalActive(false);
-        setValueStateRef(true);
-    };
-
-    const handleAddNewCard = (indexBoard: number, value: string) => {
-        dataBoards[indexBoard].cards.push({
-            header: value,
-            description: '',
             comments: [],
         });
-
-        storage.data = dataBoards;
-        setBoardState(dataBoards[indexBoard]);
-    };
-
-    const handleDeleteCard = (indexBoard: number, indexCard: number) => {
-        dataBoards[indexBoard].cards.splice(indexCard, 1);
-        setBoardState(dataBoards[indexBoard]);
-        storage.data = dataBoards;
-    };
-
-    const handleChangeBoardHeard = (value: string, index: number) => {
-        dataBoards[index].boardsHeader = value;
-        changeHeardBoard({ boardsHeader: value, boardId: dataBoards[index].boardId });
-        storage.data = dataBoards;
-    };
-
-    const handleChangeCardHeard = (value: string, indexCard: number, indexBoard: number) => {
-        dataBoards[indexBoard].cards[indexCard].header = value;
-        storage.data = dataBoards;
-        setBoardState(dataBoards[indexBoard]);
-    };
-
-    const handleChangeDescriptionCard = (value: string, indexCard: number, indexBoard: number) => {
-        dataBoards[indexBoard].cards[indexCard].description = value;
-        storage.data = dataBoards;
-        setBoardState(dataBoards[indexBoard]);
+        setModalActive(false);
+        setValueStateRef(true);
     };
 
     const handleAddNewBoard = () => {
         if (refNewBoard.current!.value !== '') {
             const id = uuidv4();
-            dataBoards.push({
-                boardsHeader: refNewBoard.current!.value,
-                boardId: id,
-                cards: [],
-            });
             addBoard({ boardsHeader: refNewBoard.current!.value, boardId: id });
             refNewBoard.current!.value = '';
-            storage.data = dataBoards;
-            setBoardState({
-                boardsHeader: refNewBoard.current!.value,
-                boardId: id,
-                cards: [],
-            });
         }
-    };
-
-    const handleDeleteBoard = (indexBoard: number) => {
-        dellBoard({ boardsHeader: dataBoards[indexBoard].boardsHeader, boardId: dataBoards[indexBoard].boardId });
-        dellCardCascade({ boardId: dataBoards[indexBoard].boardId });
-
-        dataBoards.splice(indexBoard, 1);
-        storage.data = dataBoards;
-    };
-
-    const handleAddComment = (value: string, cardIndex: number, indexBoard: number) => {
-        dataBoards[indexBoard].cards[cardIndex].comments.push({
-            description: value,
-            commentator: userName,
-        });
-        storage.data = dataBoards;
-
-        setCardState({
-            indexBoard: indexBoard,
-            index: cardIndex,
-            head: dataBoards[indexBoard].cards[cardIndex].header,
-            description: dataBoards[indexBoard].cards[cardIndex].description,
-            comments: dataBoards[indexBoard].cards[cardIndex].comments,
-        });
-    };
-
-    const handleDellComment = (commentIndex: number, indexCard: number, indexBoard: number) => {
-        dataBoards[indexBoard].cards[indexCard].comments.splice(commentIndex, 1);
-        storage.data = dataBoards;
-
-        setCardState({
-            indexBoard: indexBoard,
-            index: indexCard,
-            head: dataBoards[indexBoard].cards[indexCard].header,
-            description: dataBoards[indexBoard].cards[indexCard].description,
-            comments: dataBoards[indexBoard].cards[indexCard].comments,
-        });
-    };
-
-    const handleChangeComment = (
-        commentDescription: string,
-        commentIndex: number,
-        indexCard: number,
-        indexBoard: number,
-    ) => {
-        dataBoards[indexBoard].cards[indexCard].comments[commentIndex].description = commentDescription;
-        storage.data = dataBoards;
-
-        setCardState({
-            indexBoard: indexBoard,
-            index: indexCard,
-            head: dataBoards[indexBoard].cards[indexCard].header,
-            description: dataBoards[indexBoard].cards[indexCard].description,
-            comments: dataBoards[indexBoard].cards[indexCard].comments,
-        });
     };
 
     return (
         <BoardMain>
-            {dataBoards.map((board, boardIndex) => {
+            {boards.map((board, boardIndex) => {
                 return (
                     <BoardContent
                         key={board.boardId}
-                        onDeleteBoard={handleDeleteBoard}
-                        onBoardHeard={handleChangeBoardHeard}
-                        onAddNewCard={handleAddNewCard}
-                        onDeleteCard={handleDeleteCard}
                         onShowCardForm={handleShowCardForms}
                         boardState={board}
                         index={boardIndex}
@@ -190,16 +58,6 @@ export const BoardCard = () => {
             })}
 
             <NewBoardBody>
-                {boars.map((boardM) => {
-                    return (
-                        <p key={boardM.boardId}>
-                            {boardM.boardsHeader}
-                            {selectCardByBoard(boardM.boardId, cards).map((cardM: any) => {
-                                return <p key={cardM.cardId}>{cardM.header}</p>;
-                            })}
-                        </p>
-                    );
-                })}
                 <BoardHead>
                     <BoardHeadText
                         name="boardHeard"
@@ -213,13 +71,8 @@ export const BoardCard = () => {
             </NewBoardBody>
 
             <Card
-                onChangeComment={handleChangeComment}
-                onDellComment={handleDellComment}
-                onNewComment={handleAddComment}
-                onCardDescription={handleChangeDescriptionCard}
                 onSetValueStateRef={setValueStateRef}
                 valueStateRef={valueStateRef}
-                onCardHeard={handleChangeCardHeard}
                 cardState={cardState}
                 setCardState={setCardState}
                 active={modalActive}

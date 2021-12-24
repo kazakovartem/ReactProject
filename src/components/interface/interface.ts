@@ -1,11 +1,13 @@
 export interface IComment {
+    cardId: string;
+    commentId: string;
     description: string;
     commentator: string;
 }
 
 export interface ICardState {
-    indexBoard: number;
-    index: number;
+    cardId: string;
+    boardId: string;
     head: string;
     description: string;
     comments: IComment[];
@@ -14,13 +16,14 @@ export interface ICardState {
 interface ICard {
     header: string;
     description: string;
+    cardId: string;
     comments: IComment[];
 }
 
 export interface IBoardState {
     boardsHeader: string;
     boardId: string;
-    cards: ICard[];
+    cards?: ICard[];
 }
 
 export interface ICardList {

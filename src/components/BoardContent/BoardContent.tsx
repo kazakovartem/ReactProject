@@ -1,59 +1,57 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-import { IBoardState, IComment } from '../interface/interface';
+import { IBoardState } from '../interface/interface';
+import { useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
+import { IRootState } from '../../redux/initialState';
+import { useActions } from '../../hooks/useActions';
+import { v4 as uuidv4 } from 'uuid';
+import { useTypedSelector } from '../../hooks/useTypeSelector';
 
 interface BoardContentProps {
     boardState: IBoardState;
     index: number;
-    onShowCardForm(
-        indexBoard: number,
-        indexCard: number,
-        header: string,
-        description: string,
-        comments: IComment[],
-    ): void;
-    onDeleteCard(indexBoard: number, indexCard: number): void;
-    onAddNewCard(boardIndex: number, value: string): void;
-    onBoardHeard(boardHead: string, boardIndex: number): void;
-    onDeleteBoard(boardIndex: number): void;
+    onShowCardForm(boardId: string, cardId: string, header: string, description: string): void;
 }
 
-export const BoardContent = ({
-    boardState,
-    index,
-    onShowCardForm,
-    onDeleteCard,
-    onAddNewCard,
-    onBoardHeard,
-    onDeleteBoard,
-}: BoardContentProps) => {
+export const BoardContent = ({ boardState, onShowCardForm }: BoardContentProps) => {
     const refBoardHead = useRef<HTMLInputElement>(null);
     const refNewCard = useRef<HTMLInputElement>(null);
     const [activeAddF, setActiveAddF] = useState(false);
+    const { addCard } = useActions();
+    const { dellCard } = useActions();
+    const { dellBoard } = useActions();
+    const { dellCardCascade } = useActions();
+    const { changeHeardBoard } = useActions();
+    const { dellCommentCascade } = useActions();
+    const { comments } = useTypedSelector((state) => state);
+
+    const getCards = (state: IRootState) => state;
+
+    const selectCardsByBoardId = createSelector([getCards], (state: IRootState) => {
+        return state.cards.filter((cards) => cards.boardId === boardState.boardId);
+    });
+    const cardsByBoard = useSelector(selectCardsByBoardId);
 
     const handleChangeBoardTitle = () => {
-        onBoardHeard(refBoardHead.current!.value, index);
+        changeHeardBoard({ boardsHeader: refBoardHead.current!.value, boardId: boardState.boardId });
     };
 
-    const handleOpenCard = (
-        indexCard: number,
-        header: string,
-        comments: IComment[],
-        indexBoard: number,
-        description: string,
-    ) => {
-        onShowCardForm(indexBoard, indexCard, header, description, comments);
+    const handleOpenCard = (cardId: string, header: string, boardId: string, description: string) => {
+        onShowCardForm(boardId, cardId, header, description);
     };
 
-    const handleDeleteCard = (e: React.SyntheticEvent, boardIndex: number, cardIndex: number) => {
+    const handleDeleteCard = (e: React.SyntheticEvent, cardId: string) => {
         e.stopPropagation();
-        onDeleteCard(boardIndex, cardIndex);
+        dellCard({ cardId: cardId });
+        dellCommentCascade({ cardId: cardId });
     };
 
-    const handleNewCard = (e: React.SyntheticEvent, indexBoard: number) => {
+    const handleNewCard = (e: React.SyntheticEvent) => {
         e.stopPropagation();
         if (refNewCard.current!.value !== '') {
-            onAddNewCard(indexBoard, refNewCard.current!.value);
+            const id = uuidv4();
+            addCard({ header: refNewCard.current!.value, cardId: id, description: '', boardId: boardState.boardId });
             refNewCard.current!.value = '';
             setActiveAddF(false);
         } else {
@@ -65,44 +63,47 @@ export const BoardContent = ({
         setActiveAddF(true);
     };
 
-    const handleDeleteBoard = (indexBoard: number) => {
-        onDeleteBoard(indexBoard);
+    const handleDeleteBoard = (boardId: string) => {
+        dellBoard({ boardId: boardId });
+        dellCardCascade({ boardId: boardId });
     };
 
     return (
-        <BoardBody className="board" key={index}>
+        <BoardBody className="board" key={boardState.boardId}>
             <BoardHead>
                 <BoardHeadText
-                    key={index}
+                    key={boardState.boardId}
                     name="boardHeard"
-                    id={'boardHeard' + index}
+                    id={boardState.boardId}
                     type="text"
                     defaultValue={boardState.boardsHeader}
                     ref={refBoardHead}
                     onInput={handleChangeBoardTitle}
                 />
-                <DeleteBoardButton onClick={() => handleDeleteBoard(index)}>Dell</DeleteBoardButton>
+                <DeleteBoardButton onClick={() => handleDeleteBoard(boardState.boardId)}>Dell</DeleteBoardButton>
             </BoardHead>
             <BoardMain>
-                {boardState.cards.map((card, cardIndex) => {
+                {cardsByBoard.map((card, cardIndex) => {
                     return (
                         <Card
                             key={cardIndex}
                             onClick={() =>
-                                handleOpenCard(cardIndex, card.header, card.comments, index, card.description)
+                                handleOpenCard(card.cardId, card.header, boardState.boardId, card.description)
                             }
                         >
                             <CardHead>
                                 {card.header}
 
-                                <DeleteCardButton onClick={(e) => handleDeleteCard(e, index, cardIndex)}>
+                                <DeleteCardButton onClick={(e) => handleDeleteCard(e, card.cardId)}>
                                     Dell
                                 </DeleteCardButton>
                             </CardHead>
 
                             <br />
 
-                            <CardBody>Comments: {card.comments.length}</CardBody>
+                            <CardBody>
+                                Comments: {comments.filter((comments) => comments.cardId === card.cardId).length}
+                            </CardBody>
                         </Card>
                     );
                 })}
@@ -110,7 +111,7 @@ export const BoardContent = ({
                     <AddCardTitle theme={{ active: activeAddF }}>Add new card</AddCardTitle>
                     <AddCardBody theme={{ active: activeAddF }}>
                         <NewCardTitle type="text" ref={refNewCard} />
-                        <AddCardButton onClick={(e) => handleNewCard(e, index)}>Add</AddCardButton>
+                        <AddCardButton onClick={(e) => handleNewCard(e)}>Add</AddCardButton>
                     </AddCardBody>
                 </CardNew>
             </BoardMain>
