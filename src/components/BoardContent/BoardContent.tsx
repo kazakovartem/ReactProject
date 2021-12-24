@@ -10,7 +10,6 @@ import { useTypedSelector } from '../../hooks/useTypeSelector';
 
 interface BoardContentProps {
     boardState: IBoardState;
-    index: number;
     onShowCardForm(boardId: string, cardId: string, header: string, description: string): void;
 }
 
@@ -66,6 +65,7 @@ export const BoardContent = ({ boardState, onShowCardForm }: BoardContentProps) 
     const handleDeleteBoard = (boardId: string) => {
         dellBoard({ boardId: boardId });
         dellCardCascade({ boardId: boardId });
+        cardsByBoard.forEach((element) => dellCommentCascade({ cardId: element.cardId }));
     };
 
     return (

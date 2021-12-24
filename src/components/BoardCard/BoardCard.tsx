@@ -19,7 +19,6 @@ export const BoardCard = () => {
         cardId: '0',
         head: '',
         description: '',
-        comments: [],
     });
 
     const [modalActive, setModalActive] = useState(true);
@@ -30,7 +29,6 @@ export const BoardCard = () => {
             cardId: cardId,
             head: header,
             description: description,
-            comments: [],
         });
         setModalActive(false);
         setValueStateRef(true);
@@ -46,15 +44,8 @@ export const BoardCard = () => {
 
     return (
         <BoardMain>
-            {boards.map((board, boardIndex) => {
-                return (
-                    <BoardContent
-                        key={board.boardId}
-                        onShowCardForm={handleShowCardForms}
-                        boardState={board}
-                        index={boardIndex}
-                    />
-                );
+            {boards.map((board) => {
+                return <BoardContent key={board.boardId} onShowCardForm={handleShowCardForms} boardState={board} />;
             })}
 
             <NewBoardBody>
