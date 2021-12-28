@@ -1,8 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { addBoard, dellBoard, changeHeardBoard } from './actionCreator';
-import { initialState } from '../initialState';
+import { addBoard, dellBoard, changeHeardBoard } from './actions';
+import { initialState } from './initialState';
 
-export const Boards = createReducer(initialState.boards, (builder) => {
+const Boards = createReducer(initialState.boards, (builder) => {
     builder
         .addCase(addBoard, (state, action) => {
             state.push(action.payload);
@@ -17,3 +17,5 @@ export const Boards = createReducer(initialState.boards, (builder) => {
             }
         });
 });
+
+export default Boards;

@@ -1,8 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { addComment, dellComment, dellCommentCascade, updateComment } from './actionCreator';
-import { initialState } from '../initialState';
+import { addComment, dellComment, dellCommentCascade, updateComment } from './actions';
+import { initialState } from './initialState';
 
-export const Comments = createReducer(initialState.comments, (builder) => {
+const Comments = createReducer(initialState.comments, (builder) => {
     builder
         .addCase(addComment, (state, action) => {
             state.push(action.payload);
@@ -20,3 +20,5 @@ export const Comments = createReducer(initialState.comments, (builder) => {
             }
         });
 });
+
+export default Comments;

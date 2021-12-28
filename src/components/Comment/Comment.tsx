@@ -1,19 +1,19 @@
 import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import { IComment } from '../interface/interface';
-import { useActions } from '../../hooks/useActions';
+import { ICommentState } from '../../types';
+import { commentsOperations } from '../../state/ducks/comments';
+import { useDispatch } from 'react-redux';
 
 interface CommentProps {
     valueCommentRef: boolean;
-    commentState: IComment;
+    commentState: ICommentState;
     commentIndex: string;
 }
 
 export const Comment = ({ valueCommentRef, commentState, commentIndex }: CommentProps) => {
     const refCommentDescriptor = useRef<HTMLTextAreaElement>(null);
-    const { dellComment } = useActions();
-    const { updateComment } = useActions();
-
+    const dispatch = useDispatch();
+    console.log('draw comment', commentState.commentId, Date.now());
     useEffect(() => {
         if (valueCommentRef) {
             refCommentDescriptor.current!.value = commentState.description;
@@ -21,12 +21,17 @@ export const Comment = ({ valueCommentRef, commentState, commentIndex }: Comment
     }, [valueCommentRef, commentState.description]);
 
     const handleDellComment = () => {
-        dellComment({ commentId: commentState.commentId });
+        dispatch(commentsOperations.dellComment({ commentId: commentState.commentId }));
     };
 
     const handleChangeComment = () => {
         if (refCommentDescriptor.current!.value !== '') {
-            updateComment({ commentId: commentIndex, description: refCommentDescriptor.current!.value });
+            dispatch(
+                commentsOperations.updateComment({
+                    commentId: commentIndex,
+                    description: refCommentDescriptor.current!.value,
+                }),
+            );
             refCommentDescriptor.current!.value = commentState.description;
         }
     };

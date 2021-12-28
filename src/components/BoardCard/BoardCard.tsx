@@ -1,33 +1,33 @@
 import React, { useRef, useState } from 'react';
 import { Card } from '../Card/Card';
 import { BoardContent } from '../BoardContent/BoardContent';
-import { ICardState } from '../interface/interface';
+import { ICardState } from '../../types';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
-import { useTypedSelector } from '../../hooks/useTypeSelector';
-import { useActions } from '../../hooks/useActions';
+import { useDispatch, useSelector } from 'react-redux';
+import { boardSelectors } from '../../state/ducks/boards';
+import { boardOperations } from '../../state/ducks/boards';
 
 export const BoardCard = () => {
-    const { addBoard } = useActions();
-    const { boards } = useTypedSelector((state) => state);
-
+    const dispatch = useDispatch();
     const refNewBoard = useRef<HTMLInputElement>(null);
     const [valueStateRef, setValueStateRef] = useState(false);
-
+    console.log('draw boardCard', Date.now());
     const [cardState, setCardState] = useState<ICardState>({
         boardId: '0',
         cardId: '0',
-        head: '',
+        header: '',
         description: '',
     });
-
+    const boards = useSelector(boardSelectors.getBoards());
+    console.log(boards);
     const [modalActive, setModalActive] = useState(true);
 
     const handleShowCardForms = (boardId: string, cardId: string, header: string, description: string) => {
         setCardState({
             boardId: boardId,
             cardId: cardId,
-            head: header,
+            header: header,
             description: description,
         });
         setModalActive(false);
@@ -37,7 +37,7 @@ export const BoardCard = () => {
     const handleAddNewBoard = () => {
         if (refNewBoard.current!.value !== '') {
             const id = uuidv4();
-            addBoard({ boardsHeader: refNewBoard.current!.value, boardId: id });
+            dispatch(boardOperations.addBoard({ boardsHeader: refNewBoard.current!.value, boardId: id }));
             refNewBoard.current!.value = '';
         }
     };
@@ -45,7 +45,9 @@ export const BoardCard = () => {
     return (
         <BoardMain>
             {boards.map((board) => {
-                return <BoardContent key={board.boardId} onShowCardForm={handleShowCardForms} boardState={board} />;
+                return (
+                    <BoardContent key={board.boardId} onShowCardForm={handleShowCardForms} boardId={board.boardId} />
+                );
             })}
 
             <NewBoardBody>

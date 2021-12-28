@@ -1,39 +1,39 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-import { IBoardState } from '../interface/interface';
-import { useSelector } from 'react-redux';
-import { createSelector } from 'reselect';
-import { IRootState } from '../../redux/initialState';
-import { useActions } from '../../hooks/useActions';
+import { ICardState } from '../../types/index';
 import { v4 as uuidv4 } from 'uuid';
-import { useTypedSelector } from '../../hooks/useTypeSelector';
+import { useDispatch, useSelector } from 'react-redux';
+import { boardSelectors } from '../../state/ducks/boards';
+import { cardSelectors } from '../../state/ducks/cards';
+import { commentsSelectors } from '../../state/ducks/comments';
+import { boardOperations } from '../../state/ducks/boards';
+import { cardOperations } from '../../state/ducks/cards';
+import { commentsOperations } from '../../state/ducks/comments';
 
 interface BoardContentProps {
-    boardState: IBoardState;
+    boardId: string;
     onShowCardForm(boardId: string, cardId: string, header: string, description: string): void;
 }
 
-export const BoardContent = ({ boardState, onShowCardForm }: BoardContentProps) => {
+export const BoardContent = ({ onShowCardForm, boardId }: BoardContentProps) => {
     const refBoardHead = useRef<HTMLInputElement>(null);
     const refNewCard = useRef<HTMLInputElement>(null);
     const [activeAddF, setActiveAddF] = useState(false);
-    const { addCard } = useActions();
-    const { dellCard } = useActions();
-    const { dellBoard } = useActions();
-    const { dellCardCascade } = useActions();
-    const { changeHeardBoard } = useActions();
-    const { dellCommentCascade } = useActions();
-    const { comments } = useTypedSelector((state) => state);
+    const dispatch = useDispatch();
 
-    const getCards = (state: IRootState) => state;
+    console.log('draw boardContent ', boardId, Date.now());
 
-    const selectCardsByBoardId = createSelector([getCards], (state: IRootState) => {
-        return state.cards.filter((cards) => cards.boardId === boardState.boardId);
-    });
-    const cardsByBoard = useSelector(selectCardsByBoardId);
+    const board = useSelector(boardSelectors.getBoardById(boardId));
+    const cardsByBoard = useSelector(cardSelectors.getCardsByBoardId(boardId));
+    const comments = useSelector(commentsSelectors.getComments());
 
     const handleChangeBoardTitle = () => {
-        changeHeardBoard({ boardsHeader: refBoardHead.current!.value, boardId: boardState.boardId });
+        dispatch(
+            boardOperations.changeHeardBoard({
+                boardsHeader: refBoardHead.current!.value,
+                boardId: boardId,
+            }),
+        );
     };
 
     const handleOpenCard = (cardId: string, header: string, boardId: string, description: string) => {
@@ -42,15 +42,22 @@ export const BoardContent = ({ boardState, onShowCardForm }: BoardContentProps) 
 
     const handleDeleteCard = (e: React.SyntheticEvent, cardId: string) => {
         e.stopPropagation();
-        dellCard({ cardId: cardId });
-        dellCommentCascade({ cardId: cardId });
+        dispatch(cardOperations.dellCard({ cardId: cardId }));
+        dispatch(commentsOperations.dellCommentCascade({ cardId: cardId }));
     };
 
     const handleNewCard = (e: React.SyntheticEvent) => {
         e.stopPropagation();
         if (refNewCard.current!.value !== '') {
             const id = uuidv4();
-            addCard({ header: refNewCard.current!.value, cardId: id, description: '', boardId: boardState.boardId });
+            dispatch(
+                cardOperations.addCard({
+                    header: refNewCard.current!.value,
+                    cardId: id,
+                    description: '',
+                    boardId: boardId,
+                }),
+            );
             refNewCard.current!.value = '';
             setActiveAddF(false);
         } else {
@@ -63,33 +70,33 @@ export const BoardContent = ({ boardState, onShowCardForm }: BoardContentProps) 
     };
 
     const handleDeleteBoard = (boardId: string) => {
-        dellBoard({ boardId: boardId });
-        dellCardCascade({ boardId: boardId });
-        cardsByBoard.forEach((element) => dellCommentCascade({ cardId: element.cardId }));
+        dispatch(boardOperations.dellBoard({ boardId: boardId }));
+        dispatch(cardOperations.dellCardCascade({ boardId: boardId }));
+        cardsByBoard.forEach((element: ICardState) =>
+            dispatch(commentsOperations.dellCommentCascade({ cardId: element.cardId })),
+        );
     };
 
     return (
-        <BoardBody className="board" key={boardState.boardId}>
+        <BoardBody className="board" key={boardId}>
             <BoardHead>
                 <BoardHeadText
-                    key={boardState.boardId}
+                    key={boardId}
                     name="boardHeard"
-                    id={boardState.boardId}
+                    id={boardId}
                     type="text"
-                    defaultValue={boardState.boardsHeader}
+                    defaultValue={board?.boardsHeader}
                     ref={refBoardHead}
                     onInput={handleChangeBoardTitle}
                 />
-                <DeleteBoardButton onClick={() => handleDeleteBoard(boardState.boardId)}>Dell</DeleteBoardButton>
+                <DeleteBoardButton onClick={() => handleDeleteBoard(boardId)}>Dell</DeleteBoardButton>
             </BoardHead>
             <BoardMain>
-                {cardsByBoard.map((card, cardIndex) => {
+                {cardsByBoard.map((card, cardIndex: number) => {
                     return (
                         <Card
                             key={cardIndex}
-                            onClick={() =>
-                                handleOpenCard(card.cardId, card.header, boardState.boardId, card.description)
-                            }
+                            onClick={() => handleOpenCard(card.cardId, card.header, boardId, card.description)}
                         >
                             <CardHead>
                                 {card.header}

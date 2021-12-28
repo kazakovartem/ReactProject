@@ -5,8 +5,8 @@ import reportWebVitals from './reportWebVitals';
 import { createGlobalStyle } from 'styled-components';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import { store } from './redux/rootReducers';
-import { persistor } from './redux/rootReducers';
+import { store } from './state/store';
+import { persistor } from './state/store';
 
 const Global = createGlobalStyle`
 body {

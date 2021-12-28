@@ -1,8 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { addCard, dellCard, dellCardCascade, changeCardHead, changeCardDescription } from './actionCreator';
-import { initialState } from '../initialState';
+import { addCard, dellCard, dellCardCascade, changeCardHead, changeCardDescription } from './actions';
+import { initialState } from './initialState';
 
-export const Cards = createReducer(initialState.cards, (builder) => {
+const Cards = createReducer(initialState.cards, (builder) => {
     builder
         .addCase(addCard, (state, action) => {
             state.push(action.payload);
@@ -26,3 +26,5 @@ export const Cards = createReducer(initialState.cards, (builder) => {
             }
         });
 });
+
+export default Cards;

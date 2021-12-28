@@ -1,13 +1,13 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Comment } from '../Comment/Comment';
 import styled from 'styled-components';
-import { ICardState } from '../interface/interface';
-import { useSelector } from 'react-redux';
-import { createSelector } from 'reselect';
-import { IRootState } from '../../redux/initialState';
-import { useActions } from '../../hooks/useActions';
-import { useTypedSelector } from '../../hooks/useTypeSelector';
+import { ICardState } from '../../types';
+import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
+import { userSelectors } from '../../state/ducks/user';
+import { cardOperations } from '../../state/ducks/cards';
+import { commentsOperations } from '../../state/ducks/comments';
+import { commentsSelectors } from '../../state/ducks/comments';
 
 interface CardProps {
     valueStateRef: boolean;
@@ -23,32 +23,32 @@ export const Card = ({ valueStateRef, onSetValueStateRef, active, onSetActive, c
     const refCardDescriptor = useRef<HTMLTextAreaElement>(null);
     const refCardComment = useRef<HTMLInputElement>(null);
     const [valueCommentRef, setValueCommentRef] = useState(false);
-    const { userName } = useTypedSelector((state) => state.nameUser);
-    const { changeCardHead } = useActions();
-    const { changeCardDescription } = useActions();
-    const { addComment } = useActions();
+    const dispatch = useDispatch();
 
-    const getCards = (state: IRootState) => state;
+    const userName = useSelector(userSelectors.getName());
+    console.log('draw card', cardState.cardId, Date.now());
 
-    const selectCommentByCardId = createSelector([getCards], (state: IRootState) => {
-        return state.comments.filter((comments) => comments.cardId === cardState.cardId);
-    });
-    const comments = useSelector(selectCommentByCardId);
+    const comments = useSelector(commentsSelectors.getCommentsByCardId(cardState.cardId));
 
     useEffect(() => {
         if (valueStateRef) {
-            refCardHead.current!.value = cardState.head;
+            refCardHead.current!.value = cardState.header;
             refCardDescriptor.current!.value = cardState.description;
             refCardComment.current!.value = '';
             onSetValueStateRef(false);
             setValueCommentRef(true);
         }
-    }, [valueStateRef, cardState.description, cardState.head, onSetValueStateRef]);
+    }, [valueStateRef, cardState.description, cardState.header, onSetValueStateRef]);
 
     const handleChangeDescription = (event: React.MouseEvent) => {
         event.stopPropagation();
         if (refCardDescriptor.current!.value !== '') {
-            changeCardDescription({ description: refCardDescriptor.current!.value, cardId: cardState.cardId });
+            dispatch(
+                cardOperations.changeCardDescription({
+                    description: refCardDescriptor.current!.value,
+                    cardId: cardState.cardId,
+                }),
+            );
         }
     };
 
@@ -74,18 +74,20 @@ export const Card = ({ valueStateRef, onSetValueStateRef, active, onSetActive, c
     };
 
     const handleChangeHeadCard = () => {
-        changeCardHead({ header: refCardHead.current!.value, cardId: cardState.cardId });
+        dispatch(cardOperations.changeCardHead({ header: refCardHead.current!.value, cardId: cardState.cardId }));
     };
 
     const handleAddNewComment = () => {
         if (refCardComment.current!.value !== '') {
             const id = uuidv4();
-            addComment({
-                cardId: cardState.cardId,
-                commentId: id,
-                description: refCardComment.current!.value,
-                commentator: userName,
-            });
+            dispatch(
+                commentsOperations.addComment({
+                    cardId: cardState.cardId,
+                    commentId: id,
+                    description: refCardComment.current!.value,
+                    commentator: userName,
+                }),
+            );
             refCardComment.current!.value = '';
         }
     };
@@ -95,7 +97,7 @@ export const Card = ({ valueStateRef, onSetValueStateRef, active, onSetActive, c
             <CardFormBody onClick={handleStopPropagation}>
                 <CardName
                     name={'cardFormHeard' + cardState.cardId}
-                    defaultValue={cardState.head}
+                    defaultValue={cardState.header}
                     type="text"
                     ref={refCardHead}
                     onInput={() => handleChangeHeadCard()}
