@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
-import { actions } from '../../state/ducks/ducks';
+import { useActions } from '../../hooks/useActions';
 
 interface NameUserProps {
     active: boolean;
@@ -10,12 +9,12 @@ interface NameUserProps {
 
 const NameForm = ({ active, onSetActive }: NameUserProps) => {
     const nameUserRef = useRef<HTMLInputElement>(null);
-    const dispatch = useDispatch();
+    const { addUserName } = useActions();
     console.log('draw nameForm');
 
     const handleAddNameUser = (): void => {
         if (nameUserRef.current!.value !== '') {
-            dispatch(actions.user.addUserName(nameUserRef.current!.value));
+            addUserName(nameUserRef.current!.value);
             nameUserRef.current!.value = '';
             onSetActive(true);
         }
