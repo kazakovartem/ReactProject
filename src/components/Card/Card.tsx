@@ -4,11 +4,8 @@ import styled from 'styled-components';
 import { ICardStateById } from '../../types';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
-import { userSelectors } from '../../state/ducks/user';
-import { cardOperations } from '../../state/ducks/cards';
-import { cardSelectors } from '../../state/ducks/cards';
-import { commentsOperations } from '../../state/ducks/comments';
-import { commentsSelectors } from '../../state/ducks/comments';
+import { selectors } from '../../state/ducks/ducks';
+import { actions } from '../../state/ducks/ducks';
 
 interface CardProps {
     valueStateRef: boolean;
@@ -25,12 +22,12 @@ const Card = ({ valueStateRef, active, onSetActive, cardState }: CardProps) => {
     const refCardComment = useRef<HTMLInputElement>(null);
     const dispatch = useDispatch();
 
-    const userName = useSelector(userSelectors.getName());
+    const userName = useSelector(selectors.user.getName());
 
-    const card = useSelector(cardSelectors.getCardById(cardState.cardId));
+    const card = useSelector(selectors.cards.getCardById(cardState.cardId));
     console.log('draw card', cardState.cardId, Date.now());
 
-    const comments = useSelector(commentsSelectors.getCommentsByCardId(cardState.cardId));
+    const comments = useSelector(selectors.comments.getCommentsByCardId(cardState.cardId));
 
     useEffect(() => {
         if (valueStateRef) {
@@ -43,7 +40,7 @@ const Card = ({ valueStateRef, active, onSetActive, cardState }: CardProps) => {
     const handleChangeDescription = () => {
         if (refCardDescriptor.current!.value !== '') {
             dispatch(
-                cardOperations.changeCardDescription({
+                actions.cards.changeCardDescription({
                     description: refCardDescriptor.current!.value,
                     cardId: cardState.cardId,
                 }),
@@ -74,7 +71,7 @@ const Card = ({ valueStateRef, active, onSetActive, cardState }: CardProps) => {
     };
 
     const handleChangeHeadCard = () => {
-        dispatch(cardOperations.changeCardHead({ header: refCardHead.current!.value, cardId: cardState.cardId }));
+        dispatch(actions.cards.changeCardHead({ header: refCardHead.current!.value, cardId: cardState.cardId }));
     };
 
     const handleAddNewComment = () => {
@@ -85,7 +82,7 @@ const Card = ({ valueStateRef, active, onSetActive, cardState }: CardProps) => {
                 bId = card!.boardId;
             }
             dispatch(
-                commentsOperations.addComment({
+                actions.comments.addComment({
                     cardId: cardState.cardId,
                     commentId: id,
                     description: refCardComment.current!.value,

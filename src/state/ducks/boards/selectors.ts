@@ -2,20 +2,14 @@ import { IBoardsState } from './types';
 import { IBoardState } from '../../../types/index';
 import { createSelector } from 'reselect';
 
+const getAllBoards = (state: IBoardsState) => state.boards;
+
 function getBoardById(id: string) {
-    const getAllBoards = (state: IBoardsState) => state.boards;
-    const selectCardsByBoardId = createSelector([getAllBoards], (state) => {
-        return state.find((board: IBoardState) => board.boardId === id);
-    });
-    return selectCardsByBoardId;
+    return createSelector(getAllBoards, (state) => state.find((board: IBoardState) => board.boardId === id));
 }
 
 function getBoards() {
-    const getAllBoards = (state: IBoardsState) => state.boards;
-    const selectCardsByBoardId = createSelector([getAllBoards], (state) => {
-        return state;
-    });
-    return selectCardsByBoardId;
+    return createSelector(getAllBoards, (state) => state);
 }
 
 export default {

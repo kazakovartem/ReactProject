@@ -1,12 +1,10 @@
 import { INameState } from './types';
 import { createSelector } from 'reselect';
 
+const getUser = (state: INameState) => state.user;
+
 function getName() {
-    const getAllCards = (state: INameState) => state.user;
-    const selectCommentsByCardId = createSelector([getAllCards], (state) => {
-        return state.userName;
-    });
-    return selectCommentsByCardId;
+    return createSelector(getUser, (state) => state.userName);
 }
 
 export default {

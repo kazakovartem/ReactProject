@@ -1,36 +1,24 @@
 import { ICommentsState, ICommentState } from './types';
 import { createSelector } from 'reselect';
 
+const getAllComments = (state: ICommentsState) => state.comments;
+
 function getCommentsByCardId(id: string) {
-    const getAllCards = (state: ICommentsState) => state.comments;
-    const selectCommentsByCardId = createSelector([getAllCards], (state) => {
-        return state.filter((comment: ICommentState) => comment.cardId === id);
-    });
-    return selectCommentsByCardId;
+    return createSelector(getAllComments, (state) => state.filter((comment: ICommentState) => comment.cardId === id));
 }
 
 function getCommentsByBoardId(id: string) {
-    const getAllCards = (state: ICommentsState) => state.comments;
-    const selectCommentsByBoardId = createSelector([getAllCards], (state) => {
-        return state.filter((comment: ICommentState) => comment.boardId === id);
-    });
-    return selectCommentsByBoardId;
+    return createSelector(getAllComments, (state) => state.filter((comment: ICommentState) => comment.boardId === id));
 }
 
 function getCommentById(id: string) {
-    const getAllComments = (state: ICommentsState) => state.comments;
-    const selectCommentById = createSelector([getAllComments], (state) => {
-        return state.find((comment: ICommentState) => comment.commentId === id);
-    });
-    return selectCommentById;
+    return createSelector(getAllComments, (state) =>
+        state.filter((comment: ICommentState) => comment.commentId === id),
+    );
 }
 
 function getComments() {
-    const getAllComments = (state: ICommentsState) => state.comments;
-    const selectCards = createSelector([getAllComments], (state) => {
-        return state;
-    });
-    return selectCards;
+    return createSelector(getAllComments, (state) => state);
 }
 
 export default {

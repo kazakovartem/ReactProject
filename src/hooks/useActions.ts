@@ -1,8 +1,8 @@
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { allActionCreators } from '../state/ducks/actionCreators';
+import { actions } from '../state/ducks/ducks';
 
 export const useActions = () => {
     const dispatch = useDispatch();
-    return bindActionCreators(allActionCreators, dispatch);
+    return bindActionCreators(actions.cards, dispatch);
 };

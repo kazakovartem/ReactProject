@@ -2,28 +2,18 @@ import { ICardsState } from './types';
 import { ICardState } from '../../../types/index';
 import { createSelector } from 'reselect';
 
+const getAllCards = (state: ICardsState) => state.cards;
+
 function getCardsByBoardId(id: string) {
-    const getAllCards = (state: ICardsState) => state.cards;
-    const selectCardsByBoardId = createSelector([getAllCards], (state) => {
-        return state.filter((card: ICardState) => card.boardId === id);
-    });
-    return selectCardsByBoardId;
+    return createSelector(getAllCards, (state) => state.filter((card: ICardState) => card.boardId === id));
 }
 
 function getCardById(id: string) {
-    const getAllCards = (state: ICardsState) => state.cards;
-    const selectCardsByBoardId = createSelector([getAllCards], (state) => {
-        return state.find((card: ICardState) => card.cardId === id);
-    });
-    return selectCardsByBoardId;
+    return createSelector(getAllCards, (state) => state.find((card: ICardState) => card.cardId === id));
 }
 
 function getCards() {
-    const getAllCards = (state: ICardsState) => state.cards;
-    const selectCards = createSelector([getAllCards], (state) => {
-        return state;
-    });
-    return selectCards;
+    return createSelector(getAllCards, (state) => state);
 }
 
 export default {

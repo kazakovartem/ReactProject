@@ -1,7 +1,7 @@
 import reducer from './reducers';
 
-export { default as cardSelectors } from './selectors';
-export { default as cardOperations } from './operations';
-export { default as cardTypes } from './types';
+export { default as cardsSelectors } from './selectors';
+export { default as cardsActions } from './actions';
+export { default as cardsTypes } from './types';
 
 export default reducer;

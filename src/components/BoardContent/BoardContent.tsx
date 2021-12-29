@@ -3,12 +3,8 @@ import styled from 'styled-components';
 import { ICardState } from '../../types/index';
 import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
-import { boardSelectors } from '../../state/ducks/boards';
-import { cardSelectors } from '../../state/ducks/cards';
-import { commentsSelectors } from '../../state/ducks/comments';
-import { boardOperations } from '../../state/ducks/boards';
-import { cardOperations } from '../../state/ducks/cards';
-import { commentsOperations } from '../../state/ducks/comments';
+import { selectors } from '../../state/ducks/ducks';
+import { actions } from '../../state/ducks/ducks';
 
 interface BoardContentProps {
     boardId: string;
@@ -23,14 +19,13 @@ const BoardContent = ({ onShowCardForm, boardId }: BoardContentProps) => {
 
     console.log('draw boardContent ', boardId, Date.now());
 
-    const board = useSelector(boardSelectors.getBoardById(boardId));
-    const cardsByBoard = useSelector(cardSelectors.getCardsByBoardId(boardId));
-
-    const comments = useSelector(commentsSelectors.getCommentsByBoardId(boardId));
+    const board = useSelector(selectors.boards.getBoardById(boardId));
+    const cardsByBoard = useSelector(selectors.cards.getCardsByBoardId(boardId));
+    const comments = useSelector(selectors.comments.getCommentsByBoardId(boardId));
 
     const handleChangeBoardTitle = () => {
         dispatch(
-            boardOperations.changeHeardBoard({
+            actions.boards.changeHeardBoard({
                 boardsHeader: refBoardHead.current!.value,
                 boardId: boardId,
             }),
@@ -43,8 +38,8 @@ const BoardContent = ({ onShowCardForm, boardId }: BoardContentProps) => {
 
     const handleDeleteCard = (e: React.SyntheticEvent, cardId: string) => {
         e.stopPropagation();
-        dispatch(cardOperations.dellCard({ cardId: cardId }));
-        dispatch(commentsOperations.dellCommentCascade({ cardId: cardId }));
+        dispatch(actions.cards.dellCard({ cardId: cardId }));
+        dispatch(actions.comments.dellCommentCascade({ cardId: cardId }));
     };
 
     const handleNewCard = (e: React.SyntheticEvent) => {
@@ -52,7 +47,7 @@ const BoardContent = ({ onShowCardForm, boardId }: BoardContentProps) => {
         if (refNewCard.current!.value !== '') {
             const id = uuidv4();
             dispatch(
-                cardOperations.addCard({
+                actions.cards.addCard({
                     header: refNewCard.current!.value,
                     cardId: id,
                     description: '',
@@ -71,10 +66,10 @@ const BoardContent = ({ onShowCardForm, boardId }: BoardContentProps) => {
     };
 
     const handleDeleteBoard = (boardId: string) => {
-        dispatch(boardOperations.dellBoard({ boardId: boardId }));
-        dispatch(cardOperations.dellCardCascade({ boardId: boardId }));
+        dispatch(actions.boards.dellBoard({ boardId: boardId }));
+        dispatch(actions.cards.dellCardCascade({ boardId: boardId }));
         cardsByBoard.forEach((element: ICardState) =>
-            dispatch(commentsOperations.dellCommentCascade({ cardId: element.cardId })),
+            dispatch(actions.comments.dellCommentCascade({ cardId: element.cardId })),
         );
     };
 

@@ -1,7 +1,7 @@
 import reducer from './reducers';
 
-export { default as boardSelectors } from './selectors';
-export { default as boardOperations } from './operations';
-export { default as boardTypes } from './types';
+export { default as boardsSelectors } from './selectors';
+export { default as boardsActions } from './actions';
+export { default as boardsTypes } from './types';
 
 export default reducer;

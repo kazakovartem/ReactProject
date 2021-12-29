@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { ICommentState } from '../../types';
-import { commentsOperations } from '../../state/ducks/comments';
+import { actions } from '../../state/ducks/ducks';
 import { useDispatch } from 'react-redux';
 
 interface CommentProps {
@@ -18,13 +18,13 @@ const Comment = ({ commentState, commentIndex }: CommentProps) => {
     }, [commentState.description]);
 
     const handleDellComment = () => {
-        dispatch(commentsOperations.dellComment({ commentId: commentState.commentId }));
+        dispatch(actions.comments.dellComment({ commentId: commentState.commentId }));
     };
 
     const handleChangeComment = () => {
         if (refCommentDescriptor.current!.value !== '') {
             dispatch(
-                commentsOperations.updateComment({
+                actions.comments.updateComment({
                     commentId: commentIndex,
                     description: refCommentDescriptor.current!.value,
                 }),

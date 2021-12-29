@@ -5,8 +5,8 @@ import { ICardStateById } from '../../types';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
-import { boardSelectors } from '../../state/ducks/boards';
-import { boardOperations } from '../../state/ducks/boards';
+import { selectors } from '../../state/ducks/ducks';
+import { actions } from '../../state/ducks/ducks';
 
 const BoardCard = () => {
     const dispatch = useDispatch();
@@ -16,7 +16,7 @@ const BoardCard = () => {
     const [cardState, setCardState] = useState<ICardStateById>({
         cardId: '0',
     });
-    const boards = useSelector(boardSelectors.getBoards());
+    const boards = useSelector(selectors.boards.getBoards());
     const [modalActive, setModalActive] = useState(true);
 
     const handleShowCardForms = (cardId: string) => {
@@ -30,7 +30,7 @@ const BoardCard = () => {
     const handleAddNewBoard = () => {
         if (refNewBoard.current!.value !== '') {
             const id = uuidv4();
-            dispatch(boardOperations.addBoard({ boardsHeader: refNewBoard.current!.value, boardId: id }));
+            dispatch(actions.boards.addBoard({ boardsHeader: refNewBoard.current!.value, boardId: id }));
             refNewBoard.current!.value = '';
         }
     };

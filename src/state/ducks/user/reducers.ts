@@ -1,9 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { addUserName } from './actions';
+import * as actions from './actions';
 import { initialState } from './initialState';
 
 const nameUser = createReducer(initialState.user, (builder) => {
-    builder.addCase(addUserName, (state, action) => {
+    builder.addCase(actions.default.addUserName, (state, action) => {
         state.userName = action.payload;
     });
 });

@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
-import { userOperations } from '../../state/ducks/user';
+import { actions } from '../../state/ducks/ducks';
 
 interface NameUserProps {
     active: boolean;
@@ -15,7 +15,7 @@ const NameForm = ({ active, onSetActive }: NameUserProps) => {
 
     const handleAddNameUser = (): void => {
         if (nameUserRef.current!.value !== '') {
-            dispatch(userOperations.addUserName(nameUserRef.current!.value));
+            dispatch(actions.user.addUserName(nameUserRef.current!.value));
             nameUserRef.current!.value = '';
             onSetActive(true);
         }
