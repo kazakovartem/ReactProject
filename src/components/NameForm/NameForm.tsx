@@ -8,7 +8,7 @@ interface NameUserProps {
     onSetActive: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const NameForm = ({ active, onSetActive }: NameUserProps) => {
+const NameForm = ({ active, onSetActive }: NameUserProps) => {
     const nameUserRef = useRef<HTMLInputElement>(null);
     const dispatch = useDispatch();
     console.log('draw nameForm');
@@ -39,6 +39,8 @@ export const NameForm = ({ active, onSetActive }: NameUserProps) => {
         </NamePopup>
     );
 };
+
+export default React.memo(NameForm);
 
 const ConfButton = styled.button`
     background-color: #61dafb;

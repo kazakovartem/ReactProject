@@ -15,6 +15,7 @@ export interface INewComment {
     commentId: string;
     description: string;
     commentator: string;
+    boardId: string;
 }
 
 export interface IDellComment {
@@ -36,5 +37,14 @@ export interface ICommentsState {
         commentId: string;
         description: string;
         commentator: string;
+        boardId: string;
     }[];
+}
+
+export interface ICommentState {
+    cardId: string;
+    commentId: string;
+    description: string;
+    commentator: string;
+    boardId: string;
 }

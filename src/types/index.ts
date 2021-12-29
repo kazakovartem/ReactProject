@@ -12,6 +12,10 @@ export interface ICardState {
     description: string;
 }
 
+export interface ICardStateById {
+    cardId: string;
+}
+
 export interface IBoardState {
     boardsHeader: string;
     boardId: string;

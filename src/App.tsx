@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { NameForm } from './components/NameForm/NameForm';
-import { BoardCard } from './components/BoardCard/BoardCard';
+import NameForm from './components/NameForm/NameForm';
+import BoardCard from './components/BoardCard/BoardCard';
 import styled from 'styled-components';
 
 function App(): JSX.Element {

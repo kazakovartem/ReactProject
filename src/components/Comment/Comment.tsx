@@ -5,20 +5,17 @@ import { commentsOperations } from '../../state/ducks/comments';
 import { useDispatch } from 'react-redux';
 
 interface CommentProps {
-    valueCommentRef: boolean;
     commentState: ICommentState;
     commentIndex: string;
 }
 
-export const Comment = ({ valueCommentRef, commentState, commentIndex }: CommentProps) => {
+const Comment = ({ commentState, commentIndex }: CommentProps) => {
     const refCommentDescriptor = useRef<HTMLTextAreaElement>(null);
     const dispatch = useDispatch();
     console.log('draw comment', commentState.commentId, Date.now());
     useEffect(() => {
-        if (valueCommentRef) {
-            refCommentDescriptor.current!.value = commentState.description;
-        }
-    }, [valueCommentRef, commentState.description]);
+        refCommentDescriptor.current!.value = commentState.description;
+    }, [commentState.description]);
 
     const handleDellComment = () => {
         dispatch(commentsOperations.dellComment({ commentId: commentState.commentId }));
@@ -50,6 +47,8 @@ export const Comment = ({ valueCommentRef, commentState, commentIndex }: Comment
         </CommentCard>
     );
 };
+
+export default React.memo(Comment);
 
 const CommentCard = styled.div`
     margin-top: 2px;

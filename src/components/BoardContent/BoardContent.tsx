@@ -12,10 +12,10 @@ import { commentsOperations } from '../../state/ducks/comments';
 
 interface BoardContentProps {
     boardId: string;
-    onShowCardForm(boardId: string, cardId: string, header: string, description: string): void;
+    onShowCardForm(cardId: string): void;
 }
 
-export const BoardContent = ({ onShowCardForm, boardId }: BoardContentProps) => {
+const BoardContent = ({ onShowCardForm, boardId }: BoardContentProps) => {
     const refBoardHead = useRef<HTMLInputElement>(null);
     const refNewCard = useRef<HTMLInputElement>(null);
     const [activeAddF, setActiveAddF] = useState(false);
@@ -25,7 +25,8 @@ export const BoardContent = ({ onShowCardForm, boardId }: BoardContentProps) => 
 
     const board = useSelector(boardSelectors.getBoardById(boardId));
     const cardsByBoard = useSelector(cardSelectors.getCardsByBoardId(boardId));
-    const comments = useSelector(commentsSelectors.getComments());
+
+    const comments = useSelector(commentsSelectors.getCommentsByBoardId(boardId));
 
     const handleChangeBoardTitle = () => {
         dispatch(
@@ -36,8 +37,8 @@ export const BoardContent = ({ onShowCardForm, boardId }: BoardContentProps) => 
         );
     };
 
-    const handleOpenCard = (cardId: string, header: string, boardId: string, description: string) => {
-        onShowCardForm(boardId, cardId, header, description);
+    const handleOpenCard = (cardId: string) => {
+        onShowCardForm(cardId);
     };
 
     const handleDeleteCard = (e: React.SyntheticEvent, cardId: string) => {
@@ -94,10 +95,7 @@ export const BoardContent = ({ onShowCardForm, boardId }: BoardContentProps) => 
             <BoardMain>
                 {cardsByBoard.map((card, cardIndex: number) => {
                     return (
-                        <Card
-                            key={cardIndex}
-                            onClick={() => handleOpenCard(card.cardId, card.header, boardId, card.description)}
-                        >
+                        <Card key={cardIndex} onClick={() => handleOpenCard(card.cardId)}>
                             <CardHead>
                                 {card.header}
 
@@ -125,6 +123,8 @@ export const BoardContent = ({ onShowCardForm, boardId }: BoardContentProps) => 
         </BoardBody>
     );
 };
+
+export default React.memo(BoardContent);
 
 const BoardBody = styled.div`
     height: 600px;

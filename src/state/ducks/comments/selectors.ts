@@ -1,5 +1,4 @@
-import { ICommentsState } from './types';
-import { ICommentState } from '../../../types/index';
+import { ICommentsState, ICommentState } from './types';
 import { createSelector } from 'reselect';
 
 function getCommentsByCardId(id: string) {
@@ -8,6 +7,14 @@ function getCommentsByCardId(id: string) {
         return state.filter((comment: ICommentState) => comment.cardId === id);
     });
     return selectCommentsByCardId;
+}
+
+function getCommentsByBoardId(id: string) {
+    const getAllCards = (state: ICommentsState) => state.comments;
+    const selectCommentsByBoardId = createSelector([getAllCards], (state) => {
+        return state.filter((comment: ICommentState) => comment.boardId === id);
+    });
+    return selectCommentsByBoardId;
 }
 
 function getCommentById(id: string) {
@@ -28,6 +35,7 @@ function getComments() {
 
 export default {
     getCommentsByCardId,
+    getCommentsByBoardId,
     getCommentById,
     getComments,
 };
